@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#06357A">
 <title>MMTarasy – Karta Pomiarowa</title>
-<script src="https://cloudflare.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root { --primary: #06357A; --primary-light: #eef3fa; --border: #94a3b8; --bg: #f1f5f9; --text: #1e293b; }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
@@ -84,7 +84,7 @@
   <div class="page active" id="page1">
     <div class="doc-header">
       <div class="brand-box">
-        <svg width="54" height="54" viewBox="0 0 120 120" xmlns="http://w3.org">
+        <svg width="54" height="54" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
           <path d="M22 52 L60 15 L108 62" fill="none" stroke="#06357A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
           <text x="60" y="76" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="38" fill="#06357A">M&amp;M</text>
           <path d="M35 88 L60 112 M50 88 L68 105 M65 88 L76 98 M80 88 L85 92" fill="none" stroke="#06357A" stroke-width="6" stroke-linecap="round"/>
@@ -113,7 +113,35 @@
     <div class="sec-hdr">2. Specyfikacja Konstrukcji Głównej</div>
     <table>
       <tr><td class="lbl">System:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="sys_lux"> <strong>LUX LINE</strong> (2,7 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_smart"> <strong>SMART LINE</strong> (2,0 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_cube"> <strong>CUBE</strong></label><label class="chk-lbl"><input type="checkbox" id="sys_free"> Wolnostojąca</label></div></td></tr>
-<div class="page" id="page2">
+      <tr><td class="lbl">Pokrycie dachu:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="cov_pc_o"> Poliwęglan 16mm Opal</label><label class="chk-lbl"><input type="checkbox" id="cov_pc_c"> Poliwęglan 16mm Bezbarwny</label><label class="chk-lbl"><input type="checkbox" id="cov_gl_c"> Szkło VSG 4.4.2 Bezbarwne</label><label class="chk-lbl"><input type="checkbox" id="cov_gl_m"> Szkło VSG Mleczne</label></div></td></tr>
+      <tr><td class="lbl">Kolor RAL / Odpływ:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="ral7016"> 7016</label><label class="chk-lbl"><input type="checkbox" id="ral9005"> 9005</label><label class="chk-lbl"><input type="checkbox" id="ral9016"> 9016</label><input type="text" id="ral_other" placeholder="Inny" style="width:70px;"><span>| Odpływ:</span><label class="chk-lbl"><input type="checkbox" id="dr_l"> Lewy</label><label class="chk-lbl"><input type="checkbox" id="dr_p"> Prawy</label><label class="chk-lbl"><input type="checkbox" id="dr_g"> Grunt</label></div></td></tr>
+    </table>
+
+    <div class="sec-hdr">3. Wymiary Rzeczywiste z Natury [cm]</div>
+    <table>
+      <tr><th>Parametr</th><th style="width:110px; text-align:center;">Wymiar [cm]</th><th>Uwagi</th></tr>
+      <tr><td><strong>Szerokość przy ścianie (W1)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_w1" placeholder="cm"></td><td><input type="text" id="note_w1"></td></tr>
+      <tr><td><strong>Szerokość na froncie (W2)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_w2" placeholder="cm"></td><td><input type="text" id="note_w2"></td></tr>
+      <tr><td><strong>Głębokość / wysięg (D)</strong> (L / P)</td><td style="text-align:center;"><input type="text" class="dim-input" id="dim_d" placeholder="L / P"></td><td><input type="text" id="note_d"></td></tr>
+      <tr><td><strong>Wysokość ściany (H1)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_h1" placeholder="cm"></td><td>Spadek min. 8° (~14 cm / 100 cm)</td></tr>
+      <tr><td><strong>Wysokość pod rynną (H2)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_h2" placeholder="cm"></td><td>Min. 210–220 cm pod zabudowę</td></tr>
+      <tr><td><strong>Słupy [szt.] / Przekątne [cm]</strong></td><td style="text-align:center;"><input type="text" class="dim-input" id="dim_posts" placeholder="szt."></td><td><input type="text" id="note_diag" placeholder="Przekątne A / B [cm]"></td></tr>
+    </table>
+
+    <div class="sec-hdr">4. Ściana Nośna, Ocieplenie i Podłoże</div>
+    <table>
+      <tr><td class="lbl">Ściana / Ocieplenie:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="w_cer"> Porotherm/Cegła</label><label class="chk-lbl"><input type="checkbox" id="w_sil"> Silikat/Beton</label><label class="chk-lbl"><input type="checkbox" id="w_yt"> Gazobeton</label><span>Ocieplenie: <input type="number" id="ins_cm" style="width:65px; display:inline-block;" placeholder="cm"> cm</span></div></td></tr>
+      <tr><td class="lbl">Kolizje na elewacji:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="col_r"> Rynna</label><label class="chk-lbl"><input type="checkbox" id="col_k"> Klima/Lampy</label><label class="chk-lbl"><input type="checkbox" id="col_p"> Rolety/Podbitka</label><input type="text" id="col_txt" placeholder="Opis i wymiary kolizji w cm..." style="width:200px;"></div></td></tr>
+      <tr><td class="lbl">Podłoże pod słupy:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="g_paver"> Kostka</label><label class="chk-lbl"><input type="checkbox" id="g_slab"> Płyta betonowa</label><label class="chk-lbl"><input type="checkbox" id="g_comp"> Kompozyt/Drewno</label><label class="chk-lbl"><input type="checkbox" id="g_soil"> Grunt (stopy 40×40×80 cm)</label></div></td></tr>
+    </table>
+
+    <div class="next-bar no-print">
+      <span></span>
+      <button class="btn btn-white" style="border:2px solid var(--primary);" onclick="showPage(2)">Dalej: Strona 2 (Szkice) ➡️</button>
+    </div>
+  </div>
+
+  <div class="page" id="page2">
     <div class="doc-header">
       <div class="brand-box"><div class="company-name">MMTarasy – Szkice Pomiarowe (wymiary w cm)</div></div>
       <div>Strona 2 / 3</div>
@@ -240,7 +268,7 @@
 
     const getPos = (e) => {
       const r = canvas.getBoundingClientRect();
-      const pt = (e.touches && e.touches.length > 0) ? e.touches : e;
+      const pt = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
       return { x: (pt.clientX - r.left) * (canvas.width / r.width), y: (pt.clientY - r.top) * (canvas.height / r.height) };
     };
 
@@ -277,3 +305,136 @@
 
   function setColor(id, color, el) {
     canvases[id].color = color;
+    el.parentElement.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function undoCanvas(id) {
+    const item = canvases[id];
+    if (item && item.history.length > 0) item.ctx.putImageData(item.history.pop(), 0, 0);
+  }
+
+  function clearCanvas(id) {
+    const item = canvases[id];
+    if (item) {
+      item.history.push(item.ctx.getImageData(0, 0, item.canvas.width, item.canvas.height));
+      item.ctx.clearRect(0, 0, item.canvas.width, item.canvas.height);
+    }
+  }
+
+  function addPhotos(event) {
+    const grid = document.getElementById('photoGrid');
+    Array.from(event.target.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+        card.innerHTML = `<button class="photo-del no-print" onclick="this.parentElement.remove()">✕</button><img src="${e.target.result}"><input type="text" placeholder="Opis zdjęcia (np. elewacja, rynna)...">`;
+        grid.appendChild(card);
+      };
+      reader.readAsDataURL(file);
+    });
+    event.target.value = '';
+  }
+
+  function downloadPDF() {
+    const btn = document.getElementById('pdfBtn');
+    const root = document.getElementById('pdfRoot');
+    const clientName = (document.getElementById('c_name').value || 'Klient').trim().replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ_-]/g, '_');
+
+    if (typeof html2pdf === 'undefined') {
+      root.classList.add('pdf-mode');
+      window.print();
+      root.classList.remove('pdf-mode');
+      return;
+    }
+
+    btn.textContent = '⏳ Generowanie PDF...';
+    btn.disabled = true;
+    root.classList.add('pdf-mode');
+
+    const opt = {
+      margin: 6,
+      filename: `Karta_Pomiarowa_${clientName}.pdf`,
+      image: { type: 'jpeg', quality: 0.95 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      pagebreak: { mode: ['css', 'legacy'] }
+    };
+
+    html2pdf().set(opt).from(root).save().then(() => {
+      root.classList.remove('pdf-mode');
+      btn.textContent = '📥 Pobierz PDF';
+      btn.disabled = false;
+    }).catch(() => {
+      root.classList.remove('pdf-mode');
+      btn.textContent = '📥 Pobierz PDF';
+      btn.disabled = false;
+      window.print();
+    });
+  }
+
+  function saveForm() {
+    const data = {};
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.id) data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+    });
+    const drawings = {};
+    ['cTop', 'cSide', 'sigExec', 'sigClient'].forEach(id => {
+      if (canvases[id]) drawings[id] = canvases[id].canvas.toDataURL();
+    });
+    try {
+      localStorage.setItem('mmtarasy_pomiar', JSON.stringify({ fields: data, drawings }));
+      alert('Zapisano kopię roboczą (pola + szkice + podpisy)!');
+    } catch (e) {
+      alert('Zapisano pola formularza.');
+    }
+  }
+
+  function loadForm() {
+    try {
+      const raw = localStorage.getItem('mmtarasy_pomiar');
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      const fields = parsed.fields || parsed;
+      Object.keys(fields).forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.type === 'checkbox') el.checked = fields[id];
+        else el.value = fields[id];
+      });
+      if (parsed.drawings) {
+        Object.keys(parsed.drawings).forEach(id => {
+          if (!canvases[id]) return;
+          const img = new Image();
+          img.onload = () => canvases[id].ctx.drawImage(img, 0, 0);
+          img.src = parsed.drawings[id];
+        });
+      }
+    } catch (e) {}
+  }
+
+  function resetAll() {
+    if (!confirm('Wyczyścić wszystkie dane i zacząć nowy pomiar?')) return;
+    try { localStorage.removeItem('mmtarasy_pomiar'); } catch (e) {}
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.type === 'checkbox') el.checked = false;
+      else if (el.type !== 'file') el.value = '';
+    });
+    document.getElementById('photoGrid').innerHTML = '';
+    ['cTop', 'cSide', 'sigExec', 'sigClient'].forEach(clearCanvas);
+    document.getElementById('m_date').valueAsDate = new Date();
+    showPage(1);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('m_date').valueAsDate = new Date();
+    initCanvas('cTop', 2.5);
+    initCanvas('cSide', 2.5);
+    initCanvas('sigExec', 2.0);
+    initCanvas('sigClient', 2.0);
+    loadForm();
+  });
+</script>
+</body>
+</html>
