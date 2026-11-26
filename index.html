@@ -53,7 +53,7 @@
   }
   .page.active { display: block; }
 
-  /* Tryb generowania PDF (pokazuje wszystkie strony naraz) */
+  /* Tryb generowania PDF */
   .pdf-mode .page { display: block !important; box-shadow: none; border: none; margin-bottom: 0; page-break-after: always; }
   .pdf-mode .page:last-child { page-break-after: auto; }
   .pdf-mode .no-print { display: none !important; }
@@ -126,6 +126,14 @@
     padding: 8px 10px; font-size: 11.5px; color: #334155; line-height: 1.4; margin: 10px 0;
   }
   .next-bar { display: flex; justify-content: space-between; margin-top: 16px; gap: 10px; }
+
+  @media print {
+    body { background: #fff; }
+    .topbar, .sketch-bar, .photo-box, .photo-del, .next-bar, .no-print { display: none !important; }
+    .container { max-width: 100%; margin: 0; padding: 0; }
+    .page { display: block !important; box-shadow: none; border: none; margin: 0; page-break-after: always; }
+    .page:last-child { page-break-after: auto; }
+  }
 </style>
 </head>
 <body>
@@ -148,7 +156,7 @@
 
 <div class="container" id="pdfRoot">
 
-  <!-- ==================== STRONA 1 ==================== -->
+  <!-- STRONA 1 -->
   <div class="page active" id="page1">
     <div class="doc-header">
       <div class="brand-box">
@@ -193,6 +201,3 @@
         <td class="lbl">System:</td>
         <td>
           <div class="inline-group">
-            <label class="chk-lbl"><input type="checkbox" id="sys_lux"> <strong>LUX LINE</strong> (2,7 mm)</label>
-            <label class="chk-lbl"><input type="checkbox" id="sys_smart"> <strong>SMART LINE</strong> (2,0 mm)</label>
-            <label class="chk-lbl"><input type="checkbox" id="sys_cube"> <strong>CUBE</strong></label>
