@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#06357A">
 <title>MMTarasy – Karta Pomiarowa</title>
-<script src="https://cloudflare.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   :root { --primary: #06357A; --primary-light: #eef3fa; --border: #94a3b8; --bg: #f1f5f9; --text: #1e293b; }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
@@ -19,50 +19,49 @@
   .btn-green { background: #16a34a; color: #fff; }
   .btn-white { background: #fff; color: var(--primary); }
   .btn-red { background: #dc2626; color: #fff; }
-  .btn-sm { padding: 5px 8px; font-size: 11.5px; border: 1px solid #94a3b8; }
-  .btn-mode { background: #06357A; color: #fff; border-color: #06357A; }
+  .btn-sm { padding: 6px 10px; font-size: 12px; }
   .tabs { display: flex; gap: 6px; margin-top: 10px; background: rgba(255,255,255,0.15); padding: 4px; border-radius: 8px; }
   .tab-btn { flex: 1; border: none; background: transparent; color: #fff; padding: 9px 6px; border-radius: 6px; font-weight: 700; font-size: 12.5px; cursor: pointer; text-align: center; }
   .tab-btn.active { background: #fff; color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
-  .container { max-width: 960px; margin: 12px auto; padding: 0 10px 50px; }
+  .container { max-width: 920px; margin: 12px auto; padding: 0 10px 50px; }
   .page { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; display: none; }
   .page.active { display: block; }
-  .pdf-rendering { display: block !important; width: 794px !important; max-width: 794px !important; margin: 0 !important; padding: 14px !important; box-shadow: none !important; border: none !important; }
-  .pdf-rendering .no-print { display: none !important; }
-  .pdf-rendering .sketch-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
-  .pdf-rendering .canvas-wrap canvas { height: 220px !important; }
   .doc-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; border-bottom: 2.5px solid var(--primary); padding-bottom: 10px; margin-bottom: 12px; gap: 10px; }
   .brand-box { display: flex; align-items: center; gap: 10px; }
   .company-name { font-size: 15px; font-weight: 800; color: var(--primary); }
   .company-info { font-size: 11px; line-height: 1.35; color: #334155; }
-  .sec-hdr { background: var(--primary); color: #fff; font-weight: 700; font-size: 12px; padding: 7px 10px; text-transform: uppercase; letter-spacing: 0.4px; margin: 12px 0 8px; border-radius: 4px; }
+  .sec-hdr { background: var(--primary); color: #fff; font-weight: 700; font-size: 12px; padding: 7px 10px; text-transform: uppercase; letter-spacing: 0.4px; margin: 14px 0 8px; border-radius: 4px; }
   table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-  td, th { border: 1px solid var(--border); padding: 6px 8px; vertical-align: middle; }
+  td, th { border: 1px solid var(--border); padding: 7px 8px; vertical-align: middle; }
   th { background: var(--primary-light); color: var(--primary); font-weight: 700; text-align: left; font-size: 12px; }
   .lbl { background: #f8fafc; font-weight: 600; color: #334155; width: 26%; font-size: 12.5px; }
-  input[type="text"], input[type="number"], input[type="date"], select, textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 5px; padding: 7px; font-size: 13.5px; color: #0f172a; background: #fff; }
-  .dim-input { width: 92px !important; text-align: center; font-weight: 800; color: var(--primary); font-size: 14.5px; }
-  .inline-group { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
-  .chk-lbl { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; font-size: 12.5px; padding: 2px 0; }
-  .chk-lbl input { width: 18px; height: 18px; accent-color: var(--primary); margin: 0; }
-  .sketch-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
-  .sketch-card { border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden; background: #fff; }
-  .sketch-bar { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; background: #f8fafc; padding: 6px 8px; border-bottom: 1px solid var(--border); }
-  .dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #64748b; cursor: pointer; }
+  input[type="text"], input[type="number"], input[type="date"], select, textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 5px; padding: 8px; font-size: 14px; color: #0f172a; background: #fff; }
+  .dim-input { width: 95px !important; text-align: center; font-weight: 800; color: var(--primary); font-size: 15px; }
+  .inline-group { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+  .chk-list { display: flex; flex-direction: column; gap: 5px; }
+  .chk-lbl { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12.5px; padding: 2px 0; }
+  .chk-lbl input { width: 18px; height: 18px; accent-color: var(--primary); margin: 0; flex-shrink: 0; }
+  .sketch-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: #f8fafc; padding: 8px; border: 1px solid var(--border); border-bottom: none; border-radius: 6px 6px 0 0; }
+  .dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #64748b; cursor: pointer; }
   .dot.active { transform: scale(1.15); box-shadow: 0 0 0 2.5px #000; }
-  .canvas-wrap { background-color: #fff; background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px); background-size: 20px 20px; touch-action: none; overflow: hidden; }
+  .canvas-wrap { border: 1.5px solid var(--primary); border-radius: 0 0 6px 6px; background-color: #fff; background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px); background-size: 20px 20px; touch-action: none; overflow: hidden; }
   canvas { display: block; width: 100%; touch-action: none; }
   .photo-box { border: 2px dashed var(--primary); background: var(--primary-light); border-radius: 8px; padding: 14px; text-align: center; margin-bottom: 10px; }
-  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
   .photo-card { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #fff; position: relative; }
-  .photo-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; display: block; margin-bottom: 6px; }
-  .photo-del { position: absolute; top: 12px; right: 12px; background: #dc2626; color: #fff; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; font-weight: 700; }
+  .photo-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 4px; display: block; margin-bottom: 6px; }
+  .photo-del { position: absolute; top: 12px; right: 12px; background: #dc2626; color: #fff; border: none; border-radius: 4px; padding: 5px 9px; font-size: 12px; font-weight: 700; }
   .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
   @media (max-width: 600px) { .sig-grid { grid-template-columns: 1fr; } .lbl { width: 34%; } }
   .sig-box { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #f8fafc; }
-  .sig-canvas { background: #fff; border: 1px dashed #94a3b8; border-radius: 4px; height: 105px; width: 100%; touch-action: none; }
-  .clause { background: #f8fafc; border-left: 3.5px solid var(--primary); padding: 8px 10px; font-size: 11px; color: #334155; line-height: 1.4; margin: 10px 0; }
+  .sig-canvas { background: #fff; border: 1px dashed #94a3b8; border-radius: 4px; height: 110px; width: 100%; touch-action: none; }
+  .clause { background: #f8fafc; border-left: 3.5px solid var(--primary); padding: 8px 10px; font-size: 11.5px; color: #334155; line-height: 1.4; margin: 10px 0; }
   .next-bar { display: flex; justify-content: space-between; margin-top: 16px; gap: 10px; }
+
+  /* Tryb renderowania pojedynczej strony do PDF */
+  .pdf-rendering { width: 794px !important; max-width: 794px !important; margin: 0 !important; padding: 16px !important; box-shadow: none !important; border: none !important; display: block !important; background: #fff !important; }
+  .pdf-rendering .no-print { display: none !important; }
+  .pdf-rendering input, .pdf-rendering select, .pdf-rendering textarea { border: 1px solid #cbd5e1; background: #fff; }
 </style>
 </head>
 <body>
@@ -78,16 +77,17 @@
   </div>
   <div class="tabs">
     <button class="tab-btn active" id="tab1" onclick="showPage(1)">1. Dane i Wymiary</button>
-    <button class="tab-btn" id="tab2" onclick="showPage(2)">2. Szkice (4 widoki)</button>
+    <button class="tab-btn" id="tab2" onclick="showPage(2)">2. Szkice (Rysik)</button>
     <button class="tab-btn" id="tab3" onclick="showPage(3)">3. Zabudowy i Zdjęcia</button>
   </div>
 </div>
 
 <div class="container" id="pdfRoot">
+  <!-- STRONA 1 -->
   <div class="page active" id="page1">
     <div class="doc-header">
       <div class="brand-box">
-        <svg width="52" height="52" viewBox="0 0 120 120" xmlns="http://w3.org">
+        <svg width="54" height="54" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
           <path d="M22 52 L60 15 L108 62" fill="none" stroke="#06357A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
           <text x="60" y="76" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="38" fill="#06357A">M&amp;M</text>
           <path d="M35 88 L60 112 M50 88 L68 105 M65 88 L76 98 M80 88 L85 92" fill="none" stroke="#06357A" stroke-width="6" stroke-linecap="round"/>
@@ -100,8 +100,8 @@
       </div>
       <div>
         <strong>KARTA POMIAROWA</strong><br>
-        Data: <input type="date" id="m_date" style="width:132px; display:inline-block;">
-        Nr: <input type="text" id="m_no" placeholder="01/2026" style="width:78px; display:inline-block;">
+        Data: <input type="date" id="m_date" style="width:135px; display:inline-block;">
+        Nr: <input type="text" id="m_no" placeholder="01/2026" style="width:80px; display:inline-block;">
       </div>
     </div>
 
@@ -115,79 +115,62 @@
 
     <div class="sec-hdr">2. Specyfikacja Konstrukcji Głównej</div>
     <table>
-      <tr><td class="lbl">System:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="sys_lux"> <strong>LUX LINE</strong> (2,7 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_smart"> <strong>SMART LINE</strong> (2,0 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_free"> Wolnostojąca</label></div></td></tr>---
+      <tr><td class="lbl">System:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="sys_lux"> <strong>LUX LINE</strong> (2,7 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_smart"> <strong>SMART LINE</strong> (2,0 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_free"> Wolnostojąca</label></div></td></tr>
+      <tr><td class="lbl">Pokrycie dachu:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="cov_pc_o"> Poliwęglan 16mm Opal</label><label class="chk-lbl"><input type="checkbox" id="cov_pc_c"> Poliwęglan 16mm Bezbarwny</label><label class="chk-lbl"><input type="checkbox" id="cov_gl_c"> Szkło VSG 4.4.2 Bezbarwne</label><label class="chk-lbl"><input type="checkbox" id="cov_gl_m"> Szkło VSG Mleczne</label></div></td></tr>
+      <tr><td class="lbl">Kolor RAL / Odpływ:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="ral7016"> 7016</label><label class="chk-lbl"><input type="checkbox" id="ral9005"> 9005</label><label class="chk-lbl"><input type="checkbox" id="ral9016"> 9016</label><input type="text" id="ral_other" placeholder="Inny" style="width:70px;"><span>| Odpływ:</span><label class="chk-lbl"><input type="checkbox" id="dr_l"> Lewy</label><label class="chk-lbl"><input type="checkbox" id="dr_p"> Prawy</label><label class="chk-lbl"><input type="checkbox" id="dr_g"> Grunt</label></div></td></tr>
+    </table>
 
-### BLOK 2 z 3 (Strona 2 – 4 szkicowniki i Strona 3 – zabudowy, zdjęcia, podpisy):
+    <div class="sec-hdr">3. Wymiary Rzeczywiste z Natury [cm]</div>
+    <table>
+      <tr><th>Parametr</th><th style="width:110px; text-align:center;">Wymiar [cm]</th><th>Uwagi</th></tr>
+      <tr><td><strong>Szerokość przy ścianie (W1)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_w1" placeholder="cm"></td><td><input type="text" id="note_w1"></td></tr>
+      <tr><td><strong>Szerokość na froncie (W2)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_w2" placeholder="cm"></td><td><input type="text" id="note_w2"></td></tr>
+      <tr><td><strong>Głębokość / wysięg (D)</strong> (L / P)</td><td style="text-align:center;"><input type="text" class="dim-input" id="dim_d" placeholder="L / P"></td><td><input type="text" id="note_d"></td></tr>
+      <tr><td><strong>Wysokość ściany (H1)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_h1" placeholder="cm"></td><td><input type="text" id="note_h1"></td></tr>
+      <tr><td><strong>Wysokość pod rynną (H2)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_h2" placeholder="cm"></td><td><input type="text" id="note_h2" placeholder="Min. 210–220 cm pod zabudowę"></td></tr>
+      <tr><td><strong>Słupy [szt.] / Przekątne [cm]</strong></td><td style="text-align:center;"><input type="text" class="dim-input" id="dim_posts" placeholder="szt."></td><td><input type="text" id="note_diag" placeholder="Przekątne A / B [cm]"></td></tr>
+    </table>
 
-```html
+    <div class="sec-hdr">4. Ściana Nośna, Ocieplenie i Podłoże</div>
+    <table>
+      <tr><td class="lbl">Ściana / Ocieplenie:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="w_cer"> Porotherm/Cegła</label><label class="chk-lbl"><input type="checkbox" id="w_sil"> Silikat/Beton</label><label class="chk-lbl"><input type="checkbox" id="w_yt"> Gazobeton</label><span>Ocieplenie: <input type="number" id="ins_cm" style="width:65px; display:inline-block;" placeholder="cm"> cm</span></div></td></tr>
+      <tr><td class="lbl">Kolizje na elewacji:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="col_r"> Rynna</label><label class="chk-lbl"><input type="checkbox" id="col_k"> Klima/Lampy</label><label class="chk-lbl"><input type="checkbox" id="col_p"> Rolety/Podbitka</label><input type="text" id="col_txt" placeholder="Opis i wymiary kolizji w cm..." style="width:200px;"></div></td></tr>
+      <tr><td class="lbl">Podłoże pod słupy:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="g_paver"> Kostka</label><label class="chk-lbl"><input type="checkbox" id="g_slab"> Płyta betonowa</label><label class="chk-lbl"><input type="checkbox" id="g_comp"> Kompozyt/Drewno</label><label class="chk-lbl"><input type="checkbox" id="g_soil"> Grunt (stopy 40×40×80 cm)</label></div></td></tr>
+    </table>
+
+    <div class="next-bar no-print">
+      <span></span>
+      <button class="btn btn-white" style="border:2px solid var(--primary);" onclick="showPage(2)">Dalej: Strona 2 (Szkice) ➡️</button>
+    </div>
+  </div>
+
+  <!-- STRONA 2 -->
   <div class="page" id="page2">
     <div class="doc-header">
-      <div class="brand-box"><div class="company-name">MMTarasy – Szkice Pomiarowe (4 widoki, wymiary w cm)</div></div>
+      <div class="brand-box"><div class="company-name">MMTarasy – Szkice Pomiarowe (wymiary w cm)</div></div>
       <div>Strona 2 / 3</div>
     </div>
 
-    <div class="sketch-grid">
-      <div class="sketch-card">
-        <div class="sec-hdr" style="margin:0; border-radius:0;">1. Rzut z góry (obrys domu, słupy, odpływ, strony L / F / P)</div>
-        <div class="sketch-bar no-print">
-          <div class="dot active" style="background:#0f172a;" onclick="setColor('cTop','#0f172a',this)"></div>
-          <div class="dot" style="background:#dc2626;" onclick="setColor('cTop','#dc2626',this)"></div>
-          <div class="dot" style="background:#2563eb;" onclick="setColor('cTop','#2563eb',this)"></div>
-          <button class="btn btn-sm btn-mode" id="mode_cTop" onclick="toggleMode('cTop')">📏 Proste</button>
-          <button class="btn btn-sm btn-white" onclick="stampPost('cTop')">⬛ Słup</button>
-          <button class="btn btn-sm btn-white" onclick="stampArrow('cTop')">⬇️ Spadek</button>
-          <button class="btn btn-sm btn-white" onclick="setTextTool('cTop')">Tekst</button>
-          <button class="btn btn-sm btn-white" onclick="undoCanvas('cTop')">↩️</button>
-          <button class="btn btn-sm btn-red" onclick="clearCanvas('cTop')">✕</button>
-        </div>
-        <div class="canvas-wrap"><canvas id="cTop" height="260"></canvas></div>
-      </div>
-
-      <div class="sketch-card">
-        <div class="sec-hdr" style="margin:0; border-radius:0;">2. Widok z przodu – Front (F) (szerokość, H2, słupy, odpływ)</div>
-        <div class="sketch-bar no-print">
-          <div class="dot active" style="background:#0f172a;" onclick="setColor('cFront','#0f172a',this)"></div>
-          <div class="dot" style="background:#dc2626;" onclick="setColor('cFront','#dc2626',this)"></div>
-          <div class="dot" style="background:#2563eb;" onclick="setColor('cFront','#2563eb',this)"></div>
-          <button class="btn btn-sm btn-mode" id="mode_cFront" onclick="toggleMode('cFront')">📏 Proste</button>
-          <button class="btn btn-sm btn-white" onclick="stampPost('cFront')">⬛ Słup</button>
-          <button class="btn btn-sm btn-white" onclick="setTextTool('cFront')">Tekst</button>
-          <button class="btn btn-sm btn-white" onclick="undoCanvas('cFront')">↩️</button>
-          <button class="btn btn-sm btn-red" onclick="clearCanvas('cFront')">✕</button>
-        </div>
-        <div class="canvas-wrap"><canvas id="cFront" height="260"></canvas></div>
-      </div>
-
-      <div class="sketch-card">
-        <div class="sec-hdr" style="margin:0; border-radius:0;">3. Widok – Bok Lewy (L) (H1 / H2, spadek, klin, zabudowa L)</div>
-        <div class="sketch-bar no-print">
-          <div class="dot active" style="background:#0f172a;" onclick="setColor('cLeft','#0f172a',this)"></div>
-          <div class="dot" style="background:#dc2626;" onclick="setColor('cLeft','#dc2626',this)"></div>
-          <div class="dot" style="background:#2563eb;" onclick="setColor('cLeft','#2563eb',this)"></div>
-          <button class="btn btn-sm btn-mode" id="mode_cLeft" onclick="toggleMode('cLeft')">📏 Proste</button>
-          <button class="btn btn-sm btn-white" onclick="stampArrow('cLeft')">⬇️ Spadek</button>
-          <button class="btn btn-sm btn-white" onclick="setTextTool('cLeft')">Tekst</button>
-          <button class="btn btn-sm btn-white" onclick="undoCanvas('cLeft')">↩️</button>
-          <button class="btn btn-sm btn-red" onclick="clearCanvas('cLeft')">✕</button>
-        </div>
-        <div class="canvas-wrap"><canvas id="cLeft" height="260"></canvas></div>
-      </div>
-
-      <div class="sketch-card">
-        <div class="sec-hdr" style="margin:0; border-radius:0;">4. Widok – Bok Prawy (P) (H1 / H2, spadek, klin, zabudowa P)</div>
-        <div class="sketch-bar no-print">
-          <div class="dot active" style="background:#0f172a;" onclick="setColor('cRight','#0f172a',this)"></div>
-          <div class="dot" style="background:#dc2626;" onclick="setColor('cRight','#dc2626',this)"></div>
-          <div class="dot" style="background:#2563eb;" onclick="setColor('cRight','#2563eb',this)"></div>
-          <button class="btn btn-sm btn-mode" id="mode_cRight" onclick="toggleMode('cRight')">📏 Proste</button>
-          <button class="btn btn-sm btn-white" onclick="stampArrow('cRight')">⬇️ Spadek</button>
-          <button class="btn btn-sm btn-white" onclick="setTextTool('cRight')">Tekst</button>
-          <button class="btn btn-sm btn-white" onclick="undoCanvas('cRight')">↩️</button>
-          <button class="btn btn-sm btn-red" onclick="clearCanvas('cRight')">✕</button>
-        </div>
-        <div class="canvas-wrap"><canvas id="cRight" height="260"></canvas></div>
-      </div>
+    <div class="sec-hdr">A. Rzut z góry (obrys domu, słupy, odpływ wody, strony L / F / P)</div>
+    <div class="sketch-bar no-print">
+      <div class="dot active" style="background:#0f172a;" onclick="setColor('cTop','#0f172a',this)"></div>
+      <div class="dot" style="background:#dc2626;" onclick="setColor('cTop','#dc2626',this)"></div>
+      <div class="dot" style="background:#2563eb;" onclick="setColor('cTop','#2563eb',this)"></div>
+      <div class="dot" style="background:#16a34a;" onclick="setColor('cTop','#16a34a',this)"></div>
+      <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cTop')">↩️ Cofnij</button>
+      <button class="btn btn-sm btn-red" onclick="clearCanvas('cTop')">Wyczyść</button>
     </div>
+    <div class="canvas-wrap"><canvas id="cTop" height="360"></canvas></div>
+
+    <div class="sec-hdr">B. Przekrój boczny i widok elewacji (H1 / H2, spadek, ocieplenie, kliny)</div>
+    <div class="sketch-bar no-print">
+      <div class="dot active" style="background:#0f172a;" onclick="setColor('cSide','#0f172a',this)"></div>
+      <div class="dot" style="background:#dc2626;" onclick="setColor('cSide','#dc2626',this)"></div>
+      <div class="dot" style="background:#2563eb;" onclick="setColor('cSide','#2563eb',this)"></div>
+      <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cSide')">↩️ Cofnij</button>
+      <button class="btn btn-sm btn-red" onclick="clearCanvas('cSide')">Wyczyść</button>
+    </div>
+    <div class="canvas-wrap"><canvas id="cSide" height="340"></canvas></div>
 
     <div class="next-bar no-print">
       <button class="btn btn-white" style="border:1px solid #94a3b8;" onclick="showPage(1)">⬅️ Strona 1</button>
@@ -195,18 +178,26 @@
     </div>
   </div>
 
+  <!-- STRONA 3 -->
   <div class="page" id="page3">
     <div class="doc-header">
       <div class="brand-box"><div class="company-name">MMTarasy – Zabudowy, Zdjęcia i Podpisy</div></div>
       <div>Strona 3 / 3</div>
     </div>
 
-    <div class="sec-hdr">5. Zabudowy Boczne, Frontowe i Okna Klinowe (możliwość wyboru kilku systemów)</div>
+    <div class="sec-hdr">5. Zabudowy Boczne, Frontowe i Okna Klinowe (możliwość wyboru wielu systemów)</div>
     <table>
-      <tr><th style="width:12%;">Strona</th><th style="width:42%;">Wybrane systemy zabudowy</th><th style="width:11%;">Góra [cm]</th><th style="width:11%;">Dół [cm]</th><th style="width:12%;">Wys. L/P</th><th style="width:12%;">Tory/Uwagi</th></tr>
+      <tr><th style="width:13%;">Strona</th><th style="width:33%;">Systemy zabudowy (zaznacz wybrane)</th><th style="width:13%;">Góra [cm]</th><th style="width:13%;">Dół [cm]</th><th style="width:14%;">Wys. L/P</th><th style="width:14%;">Tory/Uwagi</th></tr>
       <tr>
         <td><strong>FRONT (F)</strong></td>
-        <td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="f_sys_sz"> Szyby przesuwne</label><label class="chk-lbl"><input type="checkbox" id="f_sys_st"> Ściana stała VSG</label><label class="chk-lbl"><input type="checkbox" id="f_sys_zip"> Roleta ZIP</label><label class="chk-lbl"><input type="checkbox" id="f_sys_pan"> Panele/Poliw.</label></div></td>
+        <td>
+          <div class="chk-list">
+            <label class="chk-lbl"><input type="checkbox" id="f_sys_sz"> Szyby przesuwne 10mm</label>
+            <label class="chk-lbl"><input type="checkbox" id="f_sys_vsg"> Ściana stała VSG</label>
+            <label class="chk-lbl"><input type="checkbox" id="f_sys_pc"> Poliwęglan / Panele</label>
+            <label class="chk-lbl"><input type="checkbox" id="f_sys_zip"> Roleta ZIP</label>
+          </div>
+        </td>
         <td><input type="number" id="f_wt" placeholder="cm"></td>
         <td><input type="number" id="f_wb" placeholder="cm"></td>
         <td><input type="text" id="f_h" placeholder="L / P"></td>
@@ -214,7 +205,14 @@
       </tr>
       <tr>
         <td><strong>LEWY (L)</strong></td>
-        <td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="l_sys_sz"> Szyby przesuwne</label><label class="chk-lbl"><input type="checkbox" id="l_sys_st"> Ściana stała VSG</label><label class="chk-lbl"><input type="checkbox" id="l_sys_zip"> Roleta ZIP</label><label class="chk-lbl"><input type="checkbox" id="l_sys_pan"> Panele/Poliw.</label></div></td>
+        <td>
+          <div class="chk-list">
+            <label class="chk-lbl"><input type="checkbox" id="l_sys_sz"> Szyby przesuwne 10mm</label>
+            <label class="chk-lbl"><input type="checkbox" id="l_sys_vsg"> Ściana stała VSG</label>
+            <label class="chk-lbl"><input type="checkbox" id="l_sys_pc"> Poliwęglan / Panele</label>
+            <label class="chk-lbl"><input type="checkbox" id="l_sys_zip"> Roleta ZIP</label>
+          </div>
+        </td>
         <td><input type="number" id="l_wt" placeholder="cm"></td>
         <td><input type="number" id="l_wb" placeholder="cm"></td>
         <td><input type="text" id="l_h" placeholder="L / P"></td>
@@ -222,7 +220,14 @@
       </tr>
       <tr>
         <td><strong>PRAWY (P)</strong></td>
-        <td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="r_sys_sz"> Szyby przesuwne</label><label class="chk-lbl"><input type="checkbox" id="r_sys_st"> Ściana stała VSG</label><label class="chk-lbl"><input type="checkbox" id="r_sys_zip"> Roleta ZIP</label><label class="chk-lbl"><input type="checkbox" id="r_sys_pan"> Panele/Poliw.</label></div></td>
+        <td>
+          <div class="chk-list">
+            <label class="chk-lbl"><input type="checkbox" id="r_sys_sz"> Szyby przesuwne 10mm</label>
+            <label class="chk-lbl"><input type="checkbox" id="r_sys_vsg"> Ściana stała VSG</label>
+            <label class="chk-lbl"><input type="checkbox" id="r_sys_pc"> Poliwęglan / Panele</label>
+            <label class="chk-lbl"><input type="checkbox" id="r_sys_zip"> Roleta ZIP</label>
+          </div>
+        </td>
         <td><input type="number" id="r_wt" placeholder="cm"></td>
         <td><input type="number" id="r_wb" placeholder="cm"></td>
         <td><input type="text" id="r_h" placeholder="L / P"></td>
@@ -230,7 +235,7 @@
       </tr>
       <tr>
         <td><strong>KLIN L / P</strong></td>
-        <td><label class="chk-lbl"><input type="checkbox" id="kl_sz"> Szkło VSG</label> <label class="chk-lbl"><input type="checkbox" id="kl_pc"> Poliwęglan</label> <label class="chk-lbl"><input type="checkbox" id="kl_pan"> Panel Al.</label></td>
+        <td><label class="chk-lbl"><input type="checkbox" id="kl_sz"> Szkło</label> <label class="chk-lbl"><input type="checkbox" id="kl_pc"> Poliw.</label></td>
         <td colspan="2"><input type="text" id="kl_w" placeholder="Podstawa L / P [cm]"></td>
         <td colspan="2"><input type="text" id="kl_h" placeholder="Wys. H1-H2 L / P [cm]"></td>
       </tr>
@@ -250,22 +255,40 @@
     </div>
     <div class="photo-grid" id="photoGrid"></div>
 
-    <div class="clause">---
+    <div class="clause">
+      <strong>Oświadczenie i akceptacja wymiarów:</strong> Inwestor potwierdza zgodność usytuowania konstrukcji z granicami działki oraz oświadcza, że w miejscu kotwienia do ściany oraz wykonania stóp fundamentowych w gruncie nie przebiegają nieoznaczone instalacje elektryczne, wod-kan, gazowe ani grzewcze. Za uszkodzenia niezgłoszonych instalacji Wykonawca nie ponosi odpowiedzialności.
+    </div>
 
-### BLOK 3 z 3 (Skrypt działania, rysowanie i PDF – kończy się `</body></html>`):
+    <div class="sig-grid">
+      <div class="sig-box">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><strong>Podpis Pomiarowca</strong><button class="btn btn-sm btn-red no-print" onclick="clearCanvas('sigExec')">Wyczyść</button></div>
+        <canvas id="sigExec" class="sig-canvas"></canvas>
+      </div>
+      <div class="sig-box">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><strong>Podpis Inwestora</strong><button class="btn btn-sm btn-red no-print" onclick="clearCanvas('sigClient')">Wyczyść</button></div>
+        <canvas id="sigClient" class="sig-canvas"></canvas>
+      </div>
+    </div>
 
-```html
+    <div class="next-bar no-print">
+      <button class="btn btn-white" style="border:1px solid #94a3b8;" onclick="showPage(2)">⬅️ Strona 2 (Szkice)</button>
+      <button class="btn btn-green" onclick="downloadPDF()">📥 Gotowe – Pobierz plik PDF</button>
+    </div>
+  </div>
+</div>
+
 <script>
   const canvases = {};
-  const sketchIds = ['cTop', 'cFront', 'cLeft', 'cRight'];
+  let currentPage = 1;
 
   function showPage(num) {
+    currentPage = num;
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('page' + num).classList.add('active');
     document.getElementById('tab' + num).classList.add('active');
     window.scrollTo(0, 0);
-    if (num === 2) sketchIds.forEach(resizeCanvas);
+    if (num === 2) { resizeCanvas('cTop'); resizeCanvas('cSide'); }
     if (num === 3) { resizeCanvas('sigExec'); resizeCanvas('sigClient'); }
   }
 
@@ -287,7 +310,7 @@
     }
   }
 
-  function initCanvas(id, lineWidth = 2.4, isSketch = true) {
+  function initCanvas(id, lineWidth = 2.4) {
     const canvas = document.getElementById(id);
     const ctx = canvas.getContext('2d');
     canvas.width = 800;
@@ -295,56 +318,34 @@
     ctx.lineJoin = 'round';
     ctx.lineWidth = lineWidth;
     ctx.strokeStyle = '#0f172a';
-
-    canvases[id] = { canvas, ctx, color: '#0f172a', lineWidth, drawing: false, history: [], initialized: false, straight: isSketch, textMode: false, startPt: null, snapshot: null };
+    canvases[id] = { canvas, ctx, color: '#0f172a', lineWidth, drawing: false, history: [], initialized: false };
 
     const getPos = (e) => {
       const r = canvas.getBoundingClientRect();
-      const pt = (e.touches && e.touches.length > 0) ? e.touches : e;
+      const pt = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
       return { x: (pt.clientX - r.left) * (canvas.width / r.width), y: (pt.clientY - r.top) * (canvas.height / r.height) };
     };
 
     const start = (e) => {
       if (e.cancelable) e.preventDefault();
-      const item = canvases[id];
+      canvases[id].history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      if (canvases[id].history.length > 15) canvases[id].history.shift();
+      canvases[id].drawing = true;
       const p = getPos(e);
-      if (item.textMode) {
-        const txt = prompt('Wpisz wymiar lub opis (np. 450 cm):');
-        if (txt && txt.trim()) {
-          saveHistory(id);
-          ctx.font = 'bold 16px Arial, sans-serif';
-          ctx.fillStyle = item.color;
-          ctx.fillText(txt.trim(), p.x, p.y);
-        }
-        item.textMode = false;
-        return;
-      }
-      saveHistory(id);
-      item.drawing = true;
-      item.startPt = p;
-      item.snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      if (!item.straight) {
-        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + 0.1, p.y + 0.1); ctx.stroke();
-      }
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x + 0.1, p.y + 0.1);
+      ctx.stroke();
     };
 
     const move = (e) => {
-      const item = canvases[id];
-      if (!item.drawing) return;
+      if (!canvases[id].drawing) return;
       if (e.cancelable) e.preventDefault();
       const p = getPos(e);
-      ctx.strokeStyle = item.color;
-      ctx.lineWidth = item.lineWidth;
-      if (item.straight) {
-        ctx.putImageData(item.snapshot, 0, 0);
-        let ex = p.x, ey = p.y;
-        const dx = Math.abs(ex - item.startPt.x), dy = Math.abs(ey - item.startPt.y);
-        if (dx > 12 && dy / dx < 0.14) ey = item.startPt.y;
-        else if (dy > 12 && dx / dy < 0.14) ex = item.startPt.x;
-        ctx.beginPath(); ctx.moveTo(item.startPt.x, item.startPt.y); ctx.lineTo(ex, ey); ctx.stroke();
-      } else {
-        ctx.lineTo(p.x, p.y); ctx.stroke();
-      }
+      ctx.strokeStyle = canvases[id].color;
+      ctx.lineWidth = canvases[id].lineWidth;
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
     };
 
     const end = () => { canvases[id].drawing = false; };
@@ -356,42 +357,8 @@
     canvas.addEventListener('touchend', end);
   }
 
-  function saveHistory(id) {
-    const item = canvases[id];
-    item.history.push(item.ctx.getImageData(0, 0, item.canvas.width, item.canvas.height));
-    if (item.history.length > 15) item.history.shift();
-  }
-
-  function toggleMode(id) {
-    const item = canvases[id];
-    item.straight = !item.straight;
-    item.textMode = false;
-    const btn = document.getElementById('mode_' + id);
-    if (item.straight) { btn.textContent = '📏 Proste'; btn.classList.add('btn-mode'); btn.classList.remove('btn-white'); }
-    else { btn.textContent = '✍️ Ręcznie'; btn.classList.remove('btn-mode'); btn.classList.add('btn-white'); }
-  }
-
-  function setTextTool(id) {
-    canvases[id].textMode = true;
-    alert('Dotknij miejsca na szkicu, w którym chcesz wpisać wymiar.');
-  }
-
-  function stampPost(id) {
-    const item = canvases[id]; saveHistory(id);
-    const cx = item.canvas.width / 2, cy = item.canvas.height / 2;
-    item.ctx.fillStyle = item.color; item.ctx.fillRect(cx - 11, cy - 11, 22, 22);
-  }
-
-  function stampArrow(id) {
-    const item = canvases[id]; saveHistory(id);
-    const cx = item.canvas.width / 2, cy = item.canvas.height / 2;
-    item.ctx.strokeStyle = '#2563eb'; item.ctx.lineWidth = 3;
-    item.ctx.beginPath(); item.ctx.moveTo(cx, cy - 28); item.ctx.lineTo(cx, cy + 28);
-    item.ctx.moveTo(cx - 10, cy + 16); item.ctx.lineTo(cx, cy + 28); item.ctx.lineTo(cx + 10, cy + 16); item.ctx.stroke();
-  }
-
   function setColor(id, color, el) {
-    canvases[id].color = color; canvases[id].textMode = false;
+    canvases[id].color = color;
     el.parentElement.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
     el.classList.add('active');
   }
@@ -403,7 +370,10 @@
 
   function clearCanvas(id) {
     const item = canvases[id];
-    if (item) { saveHistory(id); item.ctx.clearRect(0, 0, item.canvas.width, item.canvas.height); }
+    if (item) {
+      item.history.push(item.ctx.getImageData(0, 0, item.canvas.width, item.canvas.height));
+      item.ctx.clearRect(0, 0, item.canvas.width, item.canvas.height);
+    }
   }
 
   function addPhotos(event) {
@@ -413,11 +383,20 @@
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          const maxW = 900; const scale = img.width > maxW ? maxW / img.width : 1;
-          const tmp = document.createElement('canvas'); tmp.width = img.width * scale; tmp.height = img.height * scale;
-          tmp.getContext('2d').drawImage(img, 0, 0, tmp.width, tmp.height);
-          const card = document.createElement('div'); card.className = 'photo-card';
-          card.innerHTML = `<button class="photo-del no-print" onclick="this.parentElement.remove()">✕</button><img src="${tmp.toDataURL('image/jpeg', 0.78)}"><input type="text" placeholder="Opis zdjęcia...">`;
+          const maxDim = 900;
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else { w = Math.round(w * maxDim / h); h = maxDim; }
+          }
+          const c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          const compressedUrl = c.toDataURL('image/jpeg', 0.78);
+
+          const card = document.createElement('div');
+          card.className = 'photo-card';
+          card.innerHTML = `<button class="photo-del no-print" onclick="this.parentElement.remove()">✕</button><img src="${compressedUrl}"><input type="text" placeholder="Opis zdjęcia (np. elewacja, rynna)...">`;
           grid.appendChild(card);
         };
         img.src = e.target.result;
@@ -429,55 +408,133 @@
 
   async function downloadPDF() {
     const btn = document.getElementById('pdfBtn');
-    const rawInvestor = (document.getElementById('c_name').value || '').trim();
-    const rawNo = (document.getElementById('m_no').value || '').trim();
-    let baseName = rawInvestor ? rawInvestor : 'Karta_Pomiarowa_MMTarasy';
-    if (rawInvestor && rawNo) baseName += '_' + rawNo;
-    const safeFileName = baseName.replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ _-]/g, '').replace(/\s+/g, '_') + '.pdf';
+    const rawInvestor = document.getElementById('c_name').value.trim();
+    const rawNo = document.getElementById('m_no').value.trim();
 
-    if (typeof html2pdf === 'undefined') { alert('Brak połączenia z biblioteką PDF.'); return; }
-    btn.textContent = '⏳ Tworzenie PDF...'; btn.disabled = true;
+    let baseName = 'Karta_Pomiarowa_MMTarasy';
+    if (rawInvestor) {
+      const cleanInv = rawInvestor.replace(/[/\\?%*:|"<>]/g, '-').replace(/\s+/g, '_');
+      const cleanNo = rawNo ? '_' + rawNo.replace(/[/\\?%*:|"<>]/g, '-').replace(/\s+/g, '_') : '';
+      baseName = `${cleanInv}${cleanNo}`;
+    }
+
+    if (typeof html2pdf === 'undefined') {
+      alert('Brak połączenia z biblioteką PDF. Sprawdź internet i spróbuj ponownie.');
+      return;
+    }
+
+    const savedPage = currentPage;
+    btn.textContent = '⏳ Tworzenie 3 stron PDF...';
+    btn.disabled = true;
 
     try {
-      const pages = [document.getElementById('page1'), document.getElementById('page2'), document.getElementById('page3')];
-      let worker = null;
+      const pages = [
+        document.getElementById('page1'),
+        document.getElementById('page2'),
+        document.getElementById('page3')
+      ];
+
+      let worker = html2pdf().set({
+        margin: [6, 6, 6, 6],
+        filename: `${baseName}.pdf`,
+        image: { type: 'jpeg', quality: 0.92 },
+        html2canvas: { scale: 1.6, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      });
+
       for (let i = 0; i < pages.length; i++) {
-        const p = pages[i];
-        const wasActive = p.classList.contains('active');
-        p.classList.add('pdf-rendering');
-        const opt = { margin: 5, image: { type: 'jpeg', quality: 0.92 }, html2canvas: { scale: 1.6, useCORS: true, logging: false }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-        if (i === 0) worker = html2pdf().set(opt).from(p).toPdf();
-        else worker = worker.get('pdf').then(pdf => { pdf.addPage(); }).from(p).toContainer().toCanvas().toPdf();
-        await worker.get('pdf');
-        p.classList.remove('pdf-rendering');
-        if (!wasActive) p.style.display = '';
+        const el = pages[i];
+        const wasActive = el.classList.contains('active');
+        el.classList.add('pdf-rendering');
+
+        if (i === 0) {
+          worker = worker.from(el).toContainer().toCanvas().toPdf();
+        } else {
+          worker = worker.get('pdf').then(pdf => {
+            pdf.addPage();
+          }).from(el).toContainer().toCanvas().toPdf();
+        }
+
+        await worker;
+        el.classList.remove('pdf-rendering');
+        if (!wasActive) el.style.display = '';
       }
-      await worker.save(safeFileName);
+
+      await worker.save();
     } catch (err) {
-      alert('Błąd generowania PDF: ' + err.message);
+      alert('Wystąpił błąd podczas generowania PDF: ' + err.message);
     } finally {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('pdf-rendering'));
-      btn.textContent = '📥 Pobierz PDF'; btn.disabled = false;
+      document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('pdf-rendering');
+        p.style.display = '';
+      });
+      showPage(savedPage);
+      btn.textContent = '📥 Pobierz PDF';
+      btn.disabled = false;
     }
   }
 
   function saveForm() {
     const data = {};
-    document.querySelectorAll('input, select, textarea').forEach(el => { if (el.id) data[el.id] = el.type === 'checkbox' ? el.checked : el.value; });
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.id) data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+    });
     const drawings = {};
-    [...sketchIds, 'sigExec', 'sigClient'].forEach(id => { if (canvases[id]) drawings[id] = canvases[id].canvas.toDataURL(); });
-    try { localStorage.setItem('mmtarasy_pomiar', JSON.stringify({ fields: data, drawings })); alert('Zapisano kopię roboczą!'); } catch (e) {}
+    ['cTop', 'cSide', 'sigExec', 'sigClient'].forEach(id => {
+      if (canvases[id]) drawings[id] = canvases[id].canvas.toDataURL();
+    });
+    try {
+      localStorage.setItem('mmtarasy_pomiar', JSON.stringify({ fields: data, drawings }));
+      alert('Zapisano kopię roboczą (pola + szkice + podpisy)!');
+    } catch (e) {
+      alert('Zapisano pola formularza.');
+    }
   }
 
   function loadForm() {
     try {
-      const raw = localStorage.getItem('mmtarasy_pomiar'); if (!raw) return;
-      const parsed = JSON.parse(raw); const fields = parsed.fields || parsed;
-      Object.keys(fields).forEach(id => { const el = document.getElementById(id); if (!el) return; if (el.type === 'checkbox') el.checked = fields[id]; else el.value = fields[id]; });
-      if (parsed.drawings) Object.keys(parsed.drawings).forEach(id => { if (!canvases[id]) return; const img = new Image(); img.onload = () => canvases[id].ctx.drawImage(img, 0, 0); img.src = parsed.drawings[id]; });
+      const raw = localStorage.getItem('mmtarasy_pomiar');
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      const fields = parsed.fields || parsed;
+      Object.keys(fields).forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.type === 'checkbox') el.checked = fields[id];
+        else el.value = fields[id];
+      });
+      if (parsed.drawings) {
+        Object.keys(parsed.drawings).forEach(id => {
+          if (!canvases[id]) return;
+          const img = new Image();
+          img.onload = () => canvases[id].ctx.drawImage(img, 0, 0);
+          img.src = parsed.drawings[id];
+        });
+      }
     } catch (e) {}
   }
 
   function resetAll() {
     if (!confirm('Wyczyścić wszystkie dane i zacząć nowy pomiar?')) return;
     try { localStorage.removeItem('mmtarasy_pomiar'); } catch (e) {}
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+      if (el.type === 'checkbox') el.checked = false;
+      else if (el.type !== 'file') el.value = '';
+    });
+    document.getElementById('photoGrid').innerHTML = '';
+    ['cTop', 'cSide', 'sigExec', 'sigClient'].forEach(clearCanvas);
+    document.getElementById('m_date').valueAsDate = new Date();
+    showPage(1);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('m_date').valueAsDate = new Date();
+    initCanvas('cTop', 2.5);
+    initCanvas('cSide', 2.5);
+    initCanvas('sigExec', 2.0);
+    initCanvas('sigClient', 2.0);
+    loadForm();
+  });
+</script>
+</body>
+</html>
