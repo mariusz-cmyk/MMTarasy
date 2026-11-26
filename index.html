@@ -19,11 +19,11 @@
   .btn-green { background: #16a34a; color: #fff; }
   .btn-white { background: #fff; color: var(--primary); }
   .btn-red { background: #dc2626; color: #fff; }
-  .btn-sm { padding: 6px 10px; font-size: 12px; }
-  .btn-mode { border: 1.5px solid #94a3b8; background: #fff; color: #334155; }
-  .btn-mode.active { border-color: var(--primary); background: var(--primary); color: #fff; }
-  .tabs { display: flex; gap: 6px; margin-top: 10px; background: rgba(255,255,255,0.15); padding: 4px; border-radius: 8px; flex-wrap: wrap; }
-  .tab-btn { flex: 1; min-width: 110px; border: none; background: transparent; color: #fff; padding: 9px 6px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; text-align: center; }
+  .btn-mode { background: #e2e8f0; color: #1e293b; border: 1px solid #94a3b8; }
+  .btn-mode.active-mode { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn-sm { padding: 5px 9px; font-size: 12px; }
+  .tabs { display: flex; gap: 5px; margin-top: 10px; background: rgba(255,255,255,0.15); padding: 4px; border-radius: 8px; flex-wrap: wrap; }
+  .tab-btn { flex: 1; min-width: 110px; border: none; background: transparent; color: #fff; padding: 8px 5px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; text-align: center; }
   .tab-btn.active { background: #fff; color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
   .container { max-width: 920px; margin: 12px auto; padding: 0 10px 50px; }
   .page { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; display: none; }
@@ -32,72 +32,74 @@
   .brand-box { display: flex; align-items: center; gap: 10px; }
   .company-name { font-size: 15px; font-weight: 800; color: var(--primary); }
   .company-info { font-size: 11px; line-height: 1.35; color: #334155; }
-  .sec-hdr { background: var(--primary); color: #fff; font-weight: 700; font-size: 12px; padding: 7px 10px; text-transform: uppercase; letter-spacing: 0.4px; margin: 12px 0 8px; border-radius: 4px; }
+  .sec-hdr { background: var(--primary); color: #fff; font-weight: 700; font-size: 12px; padding: 7px 10px; text-transform: uppercase; letter-spacing: 0.4px; margin: 14px 0 8px; border-radius: 4px; }
   table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-  td, th { border: 1px solid var(--border); padding: 6px 8px; vertical-align: middle; }
+  td, th { border: 1px solid var(--border); padding: 7px 8px; vertical-align: middle; }
   th { background: var(--primary-light); color: var(--primary); font-weight: 700; text-align: left; font-size: 12px; }
   .lbl { background: #f8fafc; font-weight: 600; color: #334155; width: 26%; font-size: 12.5px; }
-  input[type="text"], input[type="number"], input[type="date"], select, textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 5px; padding: 7px 8px; font-size: 13.5px; color: #0f172a; background: #fff; }
-  .dim-input { width: 95px !important; text-align: center; font-weight: 800; color: var(--primary); font-size: 14.5px; }
+  input[type="text"], input[type="number"], input[type="date"], select, textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 5px; padding: 7px 8px; font-size: 14px; color: #0f172a; background: #fff; }
+  .dim-input { width: 95px !important; text-align: center; font-weight: 800; color: var(--primary); font-size: 15px; }
   .inline-group { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
-  .chk-list { display: flex; flex-direction: column; gap: 4px; }
+  .chk-list { display: flex; flex-direction: column; gap: 5px; }
   .chk-lbl { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12.5px; padding: 2px 0; }
-  .chk-lbl input { width: 17px; height: 17px; accent-color: var(--primary); margin: 0; flex-shrink: 0; }
-  .sketch-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; background: #f8fafc; padding: 8px; border: 1px solid var(--border); border-bottom: none; border-radius: 6px 6px 0 0; }
+  .chk-lbl input { width: 18px; height: 18px; accent-color: var(--primary); margin: 0; flex-shrink: 0; }
+  .sketch-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; background: #f8fafc; padding: 7px 8px; border: 1px solid var(--border); border-bottom: none; border-radius: 6px 6px 0 0; }
   .dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #64748b; cursor: pointer; flex-shrink: 0; }
   .dot.active { transform: scale(1.15); box-shadow: 0 0 0 2.5px #000; }
-  .bar-sep { width: 1px; height: 22px; background: #cbd5e1; margin: 0 2px; }
-  .canvas-wrap { border: 1.5px solid var(--primary); border-radius: 0 0 6px 6px; background-color: #fff; background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px); background-size: 20px 20px; touch-action: none; overflow: hidden; margin-bottom: 10px; }
+  .canvas-wrap { border: 1.5px solid var(--primary); border-radius: 0 0 6px 6px; background-color: #fff; background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px); background-size: 20px 20px; touch-action: none; overflow: hidden; }
   canvas { display: block; width: 100%; touch-action: none; }
   .photo-box { border: 2px dashed var(--primary); background: var(--primary-light); border-radius: 8px; padding: 14px; text-align: center; margin-bottom: 10px; }
-  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
-  .photo-card { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #fff; position: relative; break-inside: avoid; }
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+  .photo-card { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #fff; position: relative; }
   .photo-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; display: block; margin-bottom: 6px; }
   .photo-del { position: absolute; top: 12px; right: 12px; background: #dc2626; color: #fff; border: none; border-radius: 4px; padding: 5px 9px; font-size: 12px; font-weight: 700; }
-  .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; break-inside: avoid; }
+  .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
   @media (max-width: 600px) { .sig-grid { grid-template-columns: 1fr; } .lbl { width: 34%; } }
   .sig-box { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #f8fafc; }
-  .sig-canvas { background: #fff; border: 1px dashed #94a3b8; border-radius: 4px; height: 105px; width: 100%; touch-action: none; }
-  .clause { background: #f8fafc; border-left: 3.5px solid var(--primary); padding: 8px 10px; font-size: 11.5px; color: #334155; line-height: 1.4; margin: 10px 0; break-inside: avoid; }
-  .next-bar { display: flex; justify-content: space-between; margin-top: 14px; gap: 10px; }
-  .hint-badge { font-size: 11px; color: #475569; margin-left: auto; font-weight: 600; }
+  .sig-canvas { background: #fff; border: 1px dashed #94a3b8; border-radius: 4px; height: 110px; width: 100%; touch-action: none; }
+  .clause { background: #f8fafc; border-left: 3.5px solid var(--primary); padding: 8px 10px; font-size: 11.5px; color: #334155; line-height: 1.4; margin: 10px 0; }
+  .next-bar { display: flex; justify-content: space-between; margin-top: 16px; gap: 10px; }
 
-  /* Tryb renderowania całego dokumentu do A4 PDF */
-  .pdf-export-mode {
-    width: 750px !important;
-    max-width: 750px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #fff !important;
-  }
-  .pdf-export-mode .no-print {
-    display: none !important;
-  }
-  .pdf-export-mode .page {
+  /* Tryb eksportu do A4 (794px x 1122px przy 96 DPI) */
+  body.pdf-export-mode { background: #fff !important; margin: 0 !important; padding: 0 !important; width: 794px !important; overflow-x: visible !important; }
+  body.pdf-export-mode .topbar,
+  body.pdf-export-mode .no-print { display: none !important; }
+  body.pdf-export-mode .container { width: 794px !important; max-width: 794px !important; margin: 0 !important; padding: 0 !important; left: 0 !important; top: 0 !important; position: relative !important; }
+  body.pdf-export-mode .page {
     display: block !important;
-    width: 750px !important;
-    max-width: 750px !important;
+    width: 794px !important;
+    max-width: 794px !important;
+    height: 1085px !important;
+    max-height: 1085px !important;
+    overflow: hidden !important;
     margin: 0 !important;
-    padding: 12px 14px !important;
-    box-shadow: none !important;
+    padding: 14px 18px !important;
     border: none !important;
     border-radius: 0 !important;
+    box-shadow: none !important;
     background: #fff !important;
-    page-break-after: always;
-    break-after: page;
+    page-break-after: always !important;
+    break-after: page !important;
   }
-  .pdf-export-mode .page:last-child {
-    page-break-after: auto;
-    break-after: auto;
+  body.pdf-export-mode .page:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
   }
-  .pdf-export-mode .canvas-wrap {
-    border-radius: 6px !important;
-    border: 1.5px solid var(--primary) !important;
-  }
-  .pdf-export-mode input, .pdf-export-mode select, .pdf-export-mode textarea {
-    border: 1px solid #cbd5e1 !important;
-    background: #fff !important;
-  }
+  body.pdf-export-mode .doc-header { padding-bottom: 6px; margin-bottom: 8px; }
+  body.pdf-export-mode .sec-hdr { margin: 8px 0 5px; padding: 5px 8px; font-size: 11.5px; }
+  body.pdf-export-mode table { margin-bottom: 6px; }
+  body.pdf-export-mode td, body.pdf-export-mode th { padding: 4.5px 6px; font-size: 12px; }
+  body.pdf-export-mode input[type="text"],
+  body.pdf-export-mode input[type="number"],
+  body.pdf-export-mode input[type="date"],
+  body.pdf-export-mode select,
+  body.pdf-export-mode textarea { border: 1px solid #cbd5e1; background: #fff; padding: 4px 6px; font-size: 12.5px; }
+  body.pdf-export-mode .dim-input { font-size: 13.5px; padding: 4px; }
+  body.pdf-export-mode .canvas-wrap { border-radius: 6px; }
+  body.pdf-export-mode .sketch-canvas { height: 425px !important; }
 </style>
 </head>
 <body>
@@ -124,7 +126,7 @@
   <div class="page active" id="page1">
     <div class="doc-header">
       <div class="brand-box">
-        <svg width="54" height="54" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <svg width="50" height="50" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
           <path d="M22 52 L60 15 L108 62" fill="none" stroke="#06357A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
           <text x="60" y="76" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="38" fill="#06357A">M&amp;M</text>
           <path d="M35 88 L60 112 M50 88 L68 105 M65 88 L76 98 M80 88 L85 92" fill="none" stroke="#06357A" stroke-width="6" stroke-linecap="round"/>
@@ -136,9 +138,9 @@
         </div>
       </div>
       <div>
-        <strong>KARTA POMIAROWA</strong> (Strona 1 / 4)<br>
-        Data: <input type="date" id="m_date" style="width:135px; display:inline-block;">
-        Nr: <input type="text" id="m_no" placeholder="01/2026" style="width:80px; display:inline-block;">
+        <strong>KARTA POMIAROWA</strong> (Str. 1/4)<br>
+        Data: <input type="date" id="m_date" style="width:130px; display:inline-block;">
+        Nr: <input type="text" id="m_no" placeholder="01/2026" style="width:75px; display:inline-block;">
       </div>
     </div>
 
@@ -184,41 +186,35 @@
   <!-- STRONA 2: RZUT Z GÓRY + WIDOK Z PRZODU -->
   <div class="page" id="page2">
     <div class="doc-header">
-      <div class="brand-box"><div class="company-name">MMTarasy – Szkice Techniczne: Rzut z góry i Przód [cm]</div></div>
+      <div class="brand-box"><div class="company-name">MMTarasy – Szkice Pomiarowe: Rzut z góry i Widok z przodu [cm]</div></div>
       <div>Strona 2 / 4</div>
     </div>
 
     <div class="sec-hdr">A. Rzut z góry (obrys domu, słupy, odpływ wody, strony L / F / P)</div>
     <div class="sketch-bar no-print">
-      <button class="btn btn-sm btn-mode active" id="mode_cTop_line" onclick="setMode('cTop','line')">📏 Linia prosta</button>
-      <button class="btn btn-sm btn-mode" id="mode_cTop_free" onclick="setMode('cTop','free')">✏️ Odręcznie</button>
-      <div class="bar-sep"></div>
+      <button class="btn btn-sm btn-mode active-mode" id="mode_line_cTop" onclick="setDrawMode('cTop','line')">📏 Linia prosta</button>
+      <button class="btn btn-sm btn-mode" id="mode_free_cTop" onclick="setDrawMode('cTop','free')">✏️ Odręcznie</button>
       <div class="dot active" style="background:#0f172a;" onclick="setColor('cTop','#0f172a',this)"></div>
       <div class="dot" style="background:#dc2626;" onclick="setColor('cTop','#dc2626',this)"></div>
       <div class="dot" style="background:#2563eb;" onclick="setColor('cTop','#2563eb',this)"></div>
       <div class="dot" style="background:#16a34a;" onclick="setColor('cTop','#16a34a',this)"></div>
-      <div class="bar-sep"></div>
       <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cTop')">↩️ Cofnij</button>
       <button class="btn btn-sm btn-red" onclick="clearCanvas('cTop')">Wyczyść</button>
-      <span class="hint-badge">Auto-pion/poziom</span>
     </div>
-    <div class="canvas-wrap"><canvas id="cTop" height="410"></canvas></div>
+    <div class="canvas-wrap"><canvas id="cTop" class="sketch-canvas" height="415"></canvas></div>
 
-    <div class="sec-hdr">B. Widok z przodu (elewacja frontowa, rozstaw słupów, rynna, H2)</div>
+    <div class="sec-hdr">B. Widok z przodu (elewacja frontowa, rozstaw słupów, belka rynnowa, wysokość H2)</div>
     <div class="sketch-bar no-print">
-      <button class="btn btn-sm btn-mode active" id="mode_cFront_line" onclick="setMode('cFront','line')">📏 Linia prosta</button>
-      <button class="btn btn-sm btn-mode" id="mode_cFront_free" onclick="setMode('cFront','free')">✏️ Odręcznie</button>
-      <div class="bar-sep"></div>
+      <button class="btn btn-sm btn-mode active-mode" id="mode_line_cFront" onclick="setDrawMode('cFront','line')">📏 Linia prosta</button>
+      <button class="btn btn-sm btn-mode" id="mode_free_cFront" onclick="setDrawMode('cFront','free')">✏️ Odręcznie</button>
       <div class="dot active" style="background:#0f172a;" onclick="setColor('cFront','#0f172a',this)"></div>
       <div class="dot" style="background:#dc2626;" onclick="setColor('cFront','#dc2626',this)"></div>
       <div class="dot" style="background:#2563eb;" onclick="setColor('cFront','#2563eb',this)"></div>
       <div class="dot" style="background:#16a34a;" onclick="setColor('cFront','#16a34a',this)"></div>
-      <div class="bar-sep"></div>
       <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cFront')">↩️ Cofnij</button>
       <button class="btn btn-sm btn-red" onclick="clearCanvas('cFront')">Wyczyść</button>
-      <span class="hint-badge">Auto-pion/poziom</span>
     </div>
-    <div class="canvas-wrap"><canvas id="cFront" height="410"></canvas></div>
+    <div class="canvas-wrap"><canvas id="cFront" class="sketch-canvas" height="415"></canvas></div>
 
     <div class="next-bar no-print">
       <button class="btn btn-white" style="border:1px solid #94a3b8;" onclick="showPage(1)">⬅️ Strona 1 (Dane)</button>
@@ -229,41 +225,35 @@
   <!-- STRONA 3: WIDOK BOK PRAWY + WIDOK BOK LEWY -->
   <div class="page" id="page3">
     <div class="doc-header">
-      <div class="brand-box"><div class="company-name">MMTarasy – Szkice Techniczne: Widoki Boczne P i L [cm]</div></div>
+      <div class="brand-box"><div class="company-name">MMTarasy – Szkice Pomiarowe: Bok prawy i Bok lewy [cm]</div></div>
       <div>Strona 3 / 4</div>
     </div>
 
-    <div class="sec-hdr">C. Widok bok prawy – P (spadek dachu, H1 / H2, klin prawy, ocieplenie)</div>
+    <div class="sec-hdr">C. Widok bok prawy (P) (spadek dachu, H1 / H2, klin prawy, ocieplenie)</div>
     <div class="sketch-bar no-print">
-      <button class="btn btn-sm btn-mode active" id="mode_cRight_line" onclick="setMode('cRight','line')">📏 Linia prosta</button>
-      <button class="btn btn-sm btn-mode" id="mode_cRight_free" onclick="setMode('cRight','free')">✏️ Odręcznie</button>
-      <div class="bar-sep"></div>
+      <button class="btn btn-sm btn-mode active-mode" id="mode_line_cRight" onclick="setDrawMode('cRight','line')">📏 Linia prosta</button>
+      <button class="btn btn-sm btn-mode" id="mode_free_cRight" onclick="setDrawMode('cRight','free')">✏️ Odręcznie</button>
       <div class="dot active" style="background:#0f172a;" onclick="setColor('cRight','#0f172a',this)"></div>
       <div class="dot" style="background:#dc2626;" onclick="setColor('cRight','#dc2626',this)"></div>
       <div class="dot" style="background:#2563eb;" onclick="setColor('cRight','#2563eb',this)"></div>
       <div class="dot" style="background:#16a34a;" onclick="setColor('cRight','#16a34a',this)"></div>
-      <div class="bar-sep"></div>
       <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cRight')">↩️ Cofnij</button>
       <button class="btn btn-sm btn-red" onclick="clearCanvas('cRight')">Wyczyść</button>
-      <span class="hint-badge">Auto-pion/poziom</span>
     </div>
-    <div class="canvas-wrap"><canvas id="cRight" height="410"></canvas></div>
+    <div class="canvas-wrap"><canvas id="cRight" class="sketch-canvas" height="415"></canvas></div>
 
-    <div class="sec-hdr">D. Widok bok lewy – L (spadek dachu, H1 / H2, klin lewy, ocieplenie)</div>
+    <div class="sec-hdr">D. Widok bok lewy (L) (spadek dachu, H1 / H2, klin lewy, ocieplenie)</div>
     <div class="sketch-bar no-print">
-      <button class="btn btn-sm btn-mode active" id="mode_cLeft_line" onclick="setMode('cLeft','line')">📏 Linia prosta</button>
-      <button class="btn btn-sm btn-mode" id="mode_cLeft_free" onclick="setMode('cLeft','free')">✏️ Odręcznie</button>
-      <div class="bar-sep"></div>
+      <button class="btn btn-sm btn-mode active-mode" id="mode_line_cLeft" onclick="setDrawMode('cLeft','line')">📏 Linia prosta</button>
+      <button class="btn btn-sm btn-mode" id="mode_free_cLeft" onclick="setDrawMode('cLeft','free')">✏️ Odręcznie</button>
       <div class="dot active" style="background:#0f172a;" onclick="setColor('cLeft','#0f172a',this)"></div>
       <div class="dot" style="background:#dc2626;" onclick="setColor('cLeft','#dc2626',this)"></div>
       <div class="dot" style="background:#2563eb;" onclick="setColor('cLeft','#2563eb',this)"></div>
       <div class="dot" style="background:#16a34a;" onclick="setColor('cLeft','#16a34a',this)"></div>
-      <div class="bar-sep"></div>
       <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cLeft')">↩️ Cofnij</button>
       <button class="btn btn-sm btn-red" onclick="clearCanvas('cLeft')">Wyczyść</button>
-      <span class="hint-badge">Auto-pion/poziom</span>
     </div>
-    <div class="canvas-wrap"><canvas id="cLeft" height="410"></canvas></div>
+    <div class="canvas-wrap"><canvas id="cLeft" class="sketch-canvas" height="415"></canvas></div>
 
     <div class="next-bar no-print">
       <button class="btn btn-white" style="border:1px solid #94a3b8;" onclick="showPage(2)">⬅️ Strona 2 (Góra i Przód)</button>
@@ -274,7 +264,7 @@
   <!-- STRONA 4: ZABUDOWY, ZDJĘCIA I PODPISY -->
   <div class="page" id="page4">
     <div class="doc-header">
-      <div class="brand-box"><div class="company-name">MMTarasy – Zabudowy Boczne, Zdjęcia i Akceptacja</div></div>
+      <div class="brand-box"><div class="company-name">MMTarasy – Zabudowy Boczne, Dodatki i Zdjęcia</div></div>
       <div>Strona 4 / 4</div>
     </div>
 
@@ -282,10 +272,10 @@
     <table>
       <tr>
         <th style="width:13%;">Strona</th>
-        <th style="width:33%;">System zabudowy</th>
+        <th style="width:31%;">System zabudowy</th>
         <th style="width:13%;">Szer. góra</th>
         <th style="width:13%;">Szer. dół</th>
-        <th style="width:13%;">Wys. H</th>
+        <th style="width:15%;">Wys. H</th>
         <th style="width:15%;">Tor / Uwagi</th>
       </tr>
       <tr>
@@ -413,34 +403,37 @@
     }
   }
 
-  function setMode(id, mode) {
+  function setDrawMode(id, mode) {
     if (!canvases[id]) return;
     canvases[id].mode = mode;
-    const btnLine = document.getElementById('mode_' + id + '_line');
-    const btnFree = document.getElementById('mode_' + id + '_free');
-    if (btnLine) btnLine.classList.toggle('active', mode === 'line');
-    if (btnFree) btnFree.classList.toggle('active', mode === 'free');
+    const btnLine = document.getElementById('mode_line_' + id);
+    const btnFree = document.getElementById('mode_free_' + id);
+    if (btnLine && btnFree) {
+      btnLine.classList.toggle('active-mode', mode === 'line');
+      btnFree.classList.toggle('active-mode', mode === 'free');
+    }
   }
 
-  function snapPoint(start, end) {
-    const dx = end.x - start.x;
-    const dy = end.y - start.y;
-    const dist = Math.hypot(dx, dy);
-    if (dist < 6) return end;
-    const angle = Math.abs(Math.atan2(dy, dx) * 180 / Math.PI);
-    if (angle < 7 || angle > 173) {
-      return { x: end.x, y: start.y };
+  function snapTechnicalLine(x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.hypot(dx, dy);
+    if (len < 6) return { x: x2, y: y2 };
+    const angleDeg = Math.abs(Math.atan2(dy, dx) * 180 / Math.PI);
+    const snapThreshold = 7;
+    if (angleDeg < snapThreshold || Math.abs(angleDeg - 180) < snapThreshold) {
+      return { x: x2, y: y1 };
     }
-    if (Math.abs(angle - 90) < 7) {
-      return { x: start.x, y: end.y };
+    if (Math.abs(angleDeg - 90) < snapThreshold) {
+      return { x: x1, y: y2 };
     }
-    return end;
+    return { x: x2, y: y2 };
   }
 
   function initCanvas(id, lineWidth = 2.4, defaultMode = 'line') {
     const canvas = document.getElementById(id);
     const ctx = canvas.getContext('2d');
-    canvas.width = 750;
+    canvas.width = 760;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.lineWidth = lineWidth;
@@ -452,7 +445,8 @@
       lineWidth,
       mode: defaultMode,
       drawing: false,
-      startPt: null,
+      startX: 0,
+      startY: 0,
       snapshot: null,
       history: [],
       initialized: false
@@ -461,10 +455,7 @@
     const getPos = (e) => {
       const r = canvas.getBoundingClientRect();
       const pt = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
-      return {
-        x: (pt.clientX - r.left) * (canvas.width / r.width),
-        y: (pt.clientY - r.top) * (canvas.height / r.height)
-      };
+      return { x: (pt.clientX - r.left) * (canvas.width / r.width), y: (pt.clientY - r.top) * (canvas.height / r.height) };
     };
 
     const start = (e) => {
@@ -475,8 +466,10 @@
       if (item.history.length > 20) item.history.shift();
       item.snapshot = snap;
       item.drawing = true;
+
       const p = getPos(e);
-      item.startPt = p;
+      item.startX = p.x;
+      item.startY = p.y;
 
       ctx.strokeStyle = item.color;
       ctx.lineWidth = item.lineWidth;
@@ -494,12 +487,12 @@
       ctx.strokeStyle = item.color;
       ctx.lineWidth = item.lineWidth;
 
-      if (item.mode === 'line' && item.startPt && item.snapshot) {
+      if (item.mode === 'line') {
         ctx.putImageData(item.snapshot, 0, 0);
-        const endPt = snapPoint(item.startPt, p);
+        const target = snapTechnicalLine(item.startX, item.startY, p.x, p.y);
         ctx.beginPath();
-        ctx.moveTo(item.startPt.x, item.startPt.y);
-        ctx.lineTo(endPt.x, endPt.y);
+        ctx.moveTo(item.startX, item.startY);
+        ctx.lineTo(target.x, target.y);
         ctx.stroke();
       } else {
         ctx.lineTo(p.x, p.y);
@@ -512,7 +505,6 @@
       if (!item.drawing) return;
       item.drawing = false;
       item.snapshot = null;
-      item.startPt = null;
     };
 
     canvas.addEventListener('mousedown', start);
@@ -574,14 +566,13 @@
 
   async function downloadPDF() {
     const btn = document.getElementById('pdfBtn');
-    const root = document.getElementById('pdfRoot');
     const rawInvestor = document.getElementById('c_name').value.trim();
     const rawNo = document.getElementById('m_no').value.trim();
 
     let baseName = 'Karta_Pomiarowa_MMTarasy';
     if (rawInvestor) {
-      const cleanInv = rawInvestor.replace(/[/\\?%*:|"<>]/g, '-').replace(/\s+/g, '_');
-      const cleanNo = rawNo ? '_' + rawNo.replace(/[/\\?%*:|"<>]/g, '-').replace(/\s+/g, '_') : '';
+      const cleanInv = rawInvestor.replace(/[/\?%*:|"<>]/g, '-').replace(/\s+/g, '_');
+      const cleanNo = rawNo ? '_' + rawNo.replace(/[/\?%*:|"<>]/g, '-').replace(/\s+/g, '_') : '';
       baseName = `${cleanInv}${cleanNo}`;
     }
 
@@ -591,27 +582,30 @@
     }
 
     const savedPage = currentPage;
-    btn.textContent = '⏳ Generowanie A4 PDF...';
+    btn.textContent = '⏳ Tworzenie PDF A4...';
     btn.disabled = true;
 
     try {
       window.scrollTo(0, 0);
-      root.classList.add('pdf-export-mode');
+      document.body.classList.add('pdf-export-mode');
 
-      // Krótka pauza na przeliczenie układu wszystkich 4 stron przed przechwyceniem
-      await new Promise(resolve => setTimeout(resolve, 150));
+      await new Promise(resolve => setTimeout(resolve, 250));
 
+      const root = document.getElementById('pdfRoot');
       const opt = {
-        margin: [5, 5, 5, 5],
+        margin: [0, 0, 0, 0],
         filename: `${baseName}.pdf`,
         image: { type: 'jpeg', quality: 0.92 },
         html2canvas: {
-          scale: 1.5,
+          scale: 2,
           useCORS: true,
           logging: false,
           scrollX: 0,
           scrollY: 0,
-          windowWidth: 780
+          x: 0,
+          y: 0,
+          width: 794,
+          windowWidth: 794
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'] }
@@ -621,7 +615,7 @@
     } catch (err) {
       alert('Wystąpił błąd podczas generowania PDF: ' + err.message);
     } finally {
-      root.classList.remove('pdf-export-mode');
+      document.body.classList.remove('pdf-export-mode');
       showPage(savedPage);
       btn.textContent = '📥 Pobierz PDF';
       btn.disabled = false;
