@@ -8,132 +8,58 @@
 <title>MMTarasy – Karta Pomiarowa</title>
 <script src="https://cloudflare.com"></script>
 <style>
-  :root {
-    --primary: #06357A;
-    --primary-light: #eef3fa;
-    --border: #94a3b8;
-    --bg: #f1f5f9;
-    --text: #1e293b;
-  }
-  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  :root { --primary: #06357A; --primary-light: #eef3fa; --border: #94a3b8; --bg: #f1f5f9; --text: #1e293b; }
+  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
   body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-size: 14px; }
-
-  .topbar {
-    position: sticky; top: 0; z-index: 1000;
-    background: var(--primary); color: #fff;
-    padding: 10px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-  }
+  .topbar { position: sticky; top: 0; z-index: 1000; background: var(--primary); color: #fff; padding: 10px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
   .topbar-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
   .app-brand { font-weight: 800; font-size: 15px; }
   .actions { display: flex; gap: 6px; flex-wrap: wrap; }
-  .btn {
-    border: none; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-weight: 700;
-    cursor: pointer; display: inline-flex; align-items: center; gap: 5px;
-  }
+  .btn { border: none; border-radius: 6px; padding: 8px 12px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
   .btn-green { background: #16a34a; color: #fff; }
   .btn-white { background: #fff; color: var(--primary); }
   .btn-red { background: #dc2626; color: #fff; }
   .btn-sm { padding: 6px 10px; font-size: 12px; }
-
-  .tabs {
-    display: flex; gap: 6px; margin-top: 10px; background: rgba(255,255,255,0.15);
-    padding: 4px; border-radius: 8px;
-  }
-  .tab-btn {
-    flex: 1; border: none; background: transparent; color: #fff; padding: 9px 6px;
-    border-radius: 6px; font-weight: 700; font-size: 12.5px; cursor: pointer; text-align: center;
-  }
+  .tabs { display: flex; gap: 6px; margin-top: 10px; background: rgba(255,255,255,0.15); padding: 4px; border-radius: 8px; }
+  .tab-btn { flex: 1; border: none; background: transparent; color: #fff; padding: 9px 6px; border-radius: 6px; font-weight: 700; font-size: 12.5px; cursor: pointer; text-align: center; }
   .tab-btn.active { background: #fff; color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
-
   .container { max-width: 920px; margin: 12px auto; padding: 0 10px 50px; }
-  .page {
-    background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #cbd5e1;
-    display: none;
-  }
+  .page { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; display: none; }
   .page.active { display: block; }
-
-  /* Tryb generowania PDF */
   .pdf-mode .page { display: block !important; box-shadow: none; border: none; margin-bottom: 0; page-break-after: always; }
   .pdf-mode .page:last-child { page-break-after: auto; }
   .pdf-mode .no-print { display: none !important; }
-
-  .doc-header {
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-    border-bottom: 2.5px solid var(--primary); padding-bottom: 10px; margin-bottom: 12px; gap: 10px;
-  }
+  .doc-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; border-bottom: 2.5px solid var(--primary); padding-bottom: 10px; margin-bottom: 12px; gap: 10px; }
   .brand-box { display: flex; align-items: center; gap: 10px; }
   .company-name { font-size: 15px; font-weight: 800; color: var(--primary); }
   .company-info { font-size: 11px; line-height: 1.35; color: #334155; }
-
-  .sec-hdr {
-    background: var(--primary); color: #fff; font-weight: 700; font-size: 12px;
-    padding: 7px 10px; text-transform: uppercase; letter-spacing: 0.4px;
-    margin: 14px 0 8px; border-radius: 4px;
-  }
+  .sec-hdr { background: var(--primary); color: #fff; font-weight: 700; font-size: 12px; padding: 7px 10px; text-transform: uppercase; letter-spacing: 0.4px; margin: 14px 0 8px; border-radius: 4px; }
   table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
   td, th { border: 1px solid var(--border); padding: 7px 8px; vertical-align: middle; }
   th { background: var(--primary-light); color: var(--primary); font-weight: 700; text-align: left; font-size: 12px; }
   .lbl { background: #f8fafc; font-weight: 600; color: #334155; width: 26%; font-size: 12.5px; }
-
-  input[type="text"], input[type="number"], input[type="date"], select, textarea {
-    width: 100%; border: 1px solid #cbd5e1; border-radius: 5px; padding: 8px;
-    font-size: 14px; color: #0f172a; background: #fff;
-  }
+  input[type="text"], input[type="number"], input[type="date"], select, textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 5px; padding: 8px; font-size: 14px; color: #0f172a; background: #fff; }
   .dim-input { width: 95px !important; text-align: center; font-weight: 800; color: var(--primary); font-size: 15px; }
   .inline-group { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
   .chk-lbl { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; padding: 3px 0; }
   .chk-lbl input { width: 19px; height: 19px; accent-color: var(--primary); margin: 0; }
-
-  .sketch-bar {
-    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-    background: #f8fafc; padding: 8px; border: 1px solid var(--border);
-    border-bottom: none; border-radius: 6px 6px 0 0;
-  }
-  .dot {
-    width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff;
-    box-shadow: 0 0 0 1px #64748b; cursor: pointer;
-  }
+  .sketch-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: #f8fafc; padding: 8px; border: 1px solid var(--border); border-bottom: none; border-radius: 6px 6px 0 0; }
+  .dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #64748b; cursor: pointer; }
   .dot.active { transform: scale(1.15); box-shadow: 0 0 0 2.5px #000; }
-  .canvas-wrap {
-    border: 1.5px solid var(--primary); border-radius: 0 0 6px 6px;
-    background-color: #fff;
-    background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px);
-    background-size: 20px 20px;
-    touch-action: none; overflow: hidden;
-  }
+  .canvas-wrap { border: 1.5px solid var(--primary); border-radius: 0 0 6px 6px; background-color: #fff; background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px); background-size: 20px 20px; touch-action: none; overflow: hidden; }
   canvas { display: block; width: 100%; touch-action: none; }
-
-  .photo-box {
-    border: 2px dashed var(--primary); background: var(--primary-light);
-    border-radius: 8px; padding: 14px; text-align: center; margin-bottom: 10px;
-  }
+  .photo-box { border: 2px dashed var(--primary); background: var(--primary-light); border-radius: 8px; padding: 14px; text-align: center; margin-bottom: 10px; }
   .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
   .photo-card { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #fff; position: relative; }
   .photo-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 4px; display: block; margin-bottom: 6px; }
-  .photo-del {
-    position: absolute; top: 12px; right: 12px; background: #dc2626;
-    color: #fff; border: none; border-radius: 4px; padding: 5px 9px; font-size: 12px; font-weight: 700;
-  }
-
+  .photo-del { position: absolute; top: 12px; right: 12px; background: #dc2626; color: #fff; border: none; border-radius: 4px; padding: 5px 9px; font-size: 12px; font-weight: 700; }
   .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
   @media (max-width: 600px) { .sig-grid { grid-template-columns: 1fr; } .lbl { width: 34%; } }
   .sig-box { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #f8fafc; }
   .sig-canvas { background: #fff; border: 1px dashed #94a3b8; border-radius: 4px; height: 110px; width: 100%; touch-action: none; }
-
-  .clause {
-    background: #f8fafc; border-left: 3.5px solid var(--primary);
-    padding: 8px 10px; font-size: 11.5px; color: #334155; line-height: 1.4; margin: 10px 0;
-  }
+  .clause { background: #f8fafc; border-left: 3.5px solid var(--primary); padding: 8px 10px; font-size: 11.5px; color: #334155; line-height: 1.4; margin: 10px 0; }
   .next-bar { display: flex; justify-content: space-between; margin-top: 16px; gap: 10px; }
-
-  @media print {
-    body { background: #fff; }
-    .topbar, .sketch-bar, .photo-box, .photo-del, .next-bar, .no-print { display: none !important; }
-    .container { max-width: 100%; margin: 0; padding: 0; }
-    .page { display: block !important; box-shadow: none; border: none; margin: 0; page-break-after: always; }
-    .page:last-child { page-break-after: auto; }
-  }
+  @media print { body { background: #fff; } .topbar, .sketch-bar, .photo-box, .photo-del, .next-bar, .no-print { display: none !important; } .container { max-width: 100%; margin: 0; padding: 0; } .page { display: block !important; box-shadow: none; border: none; margin: 0; page-break-after: always; } .page:last-child { page-break-after: auto; } }
 </style>
 </head>
 <body>
@@ -155,8 +81,6 @@
 </div>
 
 <div class="container" id="pdfRoot">
-
-  <!-- STRONA 1 -->
   <div class="page active" id="page1">
     <div class="doc-header">
       <div class="brand-box">
@@ -183,21 +107,173 @@
       <tr><td class="lbl">Inwestor:</td><td><input type="text" id="c_name" placeholder="Imię i nazwisko / Firma"></td></tr>
       <tr><td class="lbl">Telefon / E-mail:</td><td><input type="text" id="c_phone" placeholder="+48 ... / email@..."></td></tr>
       <tr><td class="lbl">Adres montażu:</td><td><input type="text" id="c_addr" placeholder="Miejscowość, ulica, nr domu"></td></tr>
-      <tr>
-        <td class="lbl">Stawka VAT:</td>
-        <td>
-          <div class="inline-group">
-            <label class="chk-lbl"><input type="checkbox" id="vat8"> <strong>8% VAT</strong> (dom do 300 m²)</label>
-            <label class="chk-lbl"><input type="checkbox" id="vat23"> <strong>23% VAT</strong> (firma/inne)</label>
-            <span>Pomiarowiec: <input type="text" id="measurer" style="width:140px; display:inline-block;"></span>
-          </div>
-        </td>
-      </tr>
+      <tr><td class="lbl">Stawka VAT:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="vat8"> <strong>8% VAT</strong> (dom do 300 m²)</label><label class="chk-lbl"><input type="checkbox" id="vat23"> <strong>23% VAT</strong> (firma/inne)</label><span>Pomiarowiec: <input type="text" id="measurer" style="width:140px; display:inline-block;"></span></div></td></tr>
     </table>
 
     <div class="sec-hdr">2. Specyfikacja Konstrukcji Głównej</div>
     <table>
-      <tr>
-        <td class="lbl">System:</td>
-        <td>
-          <div class="inline-group">
+      <tr><td class="lbl">System:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="sys_lux"> <strong>LUX LINE</strong> (2,7 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_smart"> <strong>SMART LINE</strong> (2,0 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_cube"> <strong>CUBE</strong></label><label class="chk-lbl"><input type="checkbox" id="sys_free"> Wolnostojąca</label></div></td></tr>
+<div class="page" id="page2">
+    <div class="doc-header">
+      <div class="brand-box"><div class="company-name">MMTarasy – Szkice Pomiarowe (wymiary w cm)</div></div>
+      <div>Strona 2 / 3</div>
+    </div>
+
+    <div class="sec-hdr">A. Rzut z góry (obrys domu, słupy, odpływ wody, strony L / F / P)</div>
+    <div class="sketch-bar no-print">
+      <div class="dot active" style="background:#0f172a;" onclick="setColor('cTop','#0f172a',this)"></div>
+      <div class="dot" style="background:#dc2626;" onclick="setColor('cTop','#dc2626',this)"></div>
+      <div class="dot" style="background:#2563eb;" onclick="setColor('cTop','#2563eb',this)"></div>
+      <div class="dot" style="background:#16a34a;" onclick="setColor('cTop','#16a34a',this)"></div>
+      <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cTop')">↩️ Cofnij</button>
+      <button class="btn btn-sm btn-red" onclick="clearCanvas('cTop')">Wyczyść</button>
+    </div>
+    <div class="canvas-wrap"><canvas id="cTop" height="360"></canvas></div>
+
+    <div class="sec-hdr">B. Przekrój boczny i widok elewacji (H1 / H2, spadek, ocieplenie, kliny)</div>
+    <div class="sketch-bar no-print">
+      <div class="dot active" style="background:#0f172a;" onclick="setColor('cSide','#0f172a',this)"></div>
+      <div class="dot" style="background:#dc2626;" onclick="setColor('cSide','#dc2626',this)"></div>
+      <div class="dot" style="background:#2563eb;" onclick="setColor('cSide','#2563eb',this)"></div>
+      <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cSide')">↩️ Cofnij</button>
+      <button class="btn btn-sm btn-red" onclick="clearCanvas('cSide')">Wyczyść</button>
+    </div>
+    <div class="canvas-wrap"><canvas id="cSide" height="340"></canvas></div>
+
+    <div class="next-bar no-print">
+      <button class="btn btn-white" style="border:1px solid #94a3b8;" onclick="showPage(1)">⬅️ Strona 1</button>
+      <button class="btn btn-white" style="border:2px solid var(--primary);" onclick="showPage(3)">Dalej: Strona 3 (Zabudowy i Zdjęcia) ➡️</button>
+    </div>
+  </div>
+
+  <div class="page" id="page3">
+    <div class="doc-header">
+      <div class="brand-box"><div class="company-name">MMTarasy – Zabudowy, Zdjęcia i Podpisy</div></div>
+      <div>Strona 3 / 3</div>
+    </div>
+
+    <div class="sec-hdr">5. Zabudowy Boczne, Frontowe i Okna Klinowe (wymiary w świetle [cm])</div>
+    <table>
+      <tr><th style="width:14%;">Strona</th><th style="width:28%;">Typ zabudowy</th><th style="width:14%;">Góra [cm]</th><th style="width:14%;">Dół [cm]</th><th style="width:15%;">Wys. L/P</th><th style="width:15%;">Tory/Uwagi</th></tr>
+      <tr><td><strong>FRONT (F)</strong></td><td><select id="f_type"><option value="">-- brak --</option><option>Szyby przesuwne 10mm</option><option>Ściana stała VSG</option><option>Roleta ZIP</option></select></td><td><input type="number" id="f_wt" placeholder="cm"></td><td><input type="number" id="f_wb" placeholder="cm"></td><td><input type="text" id="f_h" placeholder="L / P"></td><td><input type="text" id="f_tr" placeholder="4-tor."></td></tr>
+      <tr><td><strong>LEWY (L)</strong></td><td><select id="l_type"><option value="">-- brak --</option><option>Szyby przesuwne 10mm</option><option>Ściana stała VSG</option><option>Poliwęglan / Panele</option><option>Roleta ZIP</option></select></td><td><input type="number" id="l_wt" placeholder="cm"></td><td><input type="number" id="l_wb" placeholder="cm"></td><td><input type="text" id="l_h" placeholder="L / P"></td><td><input type="text" id="l_tr" placeholder="3-tor."></td></tr>
+      <tr><td><strong>PRAWY (P)</strong></td><td><select id="r_type"><option value="">-- brak --</option><option>Szyby przesuwne 10mm</option><option>Ściana stała VSG</option><option>Poliwęglan / Panele</option><option>Roleta ZIP</option></select></td><td><input type="number" id="r_wt" placeholder="cm"></td><td><input type="number" id="r_wb" placeholder="cm"></td><td><input type="text" id="r_h" placeholder="L / P"></td><td><input type="text" id="r_tr" placeholder="3-tor."></td></tr>
+      <tr><td><strong>KLIN L / P</strong></td><td><label class="chk-lbl"><input type="checkbox" id="kl_sz"> Szkło</label> <label class="chk-lbl"><input type="checkbox" id="kl_pc"> Poliw.</label></td><td colspan="2"><input type="text" id="kl_w" placeholder="Podstawa L / P [cm]"></td><td colspan="2"><input type="text" id="kl_h" placeholder="Wys. H1-H2 L / P [cm]"></td></tr>
+    </table>
+
+    <table>
+      <tr><td class="lbl">Rolety / Markiza / LED:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="add_zip"> ZIP (<input type="text" id="zip_dim" style="width:110px; display:inline-block;" placeholder="szt./cm">)</label><label class="chk-lbl"><input type="checkbox" id="add_mar"> Markiza</label><label class="chk-lbl"><input type="checkbox" id="add_led"> LED (<input type="number" id="led_pcs" style="width:55px; display:inline-block;" placeholder="pkt"> pkt)</label></div></td></tr>
+      <tr><td class="lbl">Uwagi dodatkowe:</td><td><textarea id="final_notes" rows="2" placeholder="Dodatkowe ustalenia..."></textarea></td></tr>
+    </table>
+
+    <div class="sec-hdr">6. Zdjęcia z Miejsca Pomiaru</div>
+    <div class="photo-box no-print">
+      <label class="btn btn-white" style="border:2px solid var(--primary); cursor:pointer;">
+        📷 Zrób zdjęcie aparatem lub wybierz z galerii
+        <input type="file" accept="image/*" multiple onchange="addPhotos(event)" style="display:none;">
+      </label>
+    </div>
+    <div class="photo-grid" id="photoGrid"></div>
+
+    <div class="clause">
+      <strong>Oświadczenie i akceptacja wymiarów:</strong> Inwestor potwierdza zgodność usytuowania konstrukcji z granicami działki oraz oświadcza, że w miejscu kotwienia do ściany oraz wykonania stóp fundamentowych w gruncie nie przebiegają nieoznaczone instalacje elektryczne, wod-kan, gazowe ani grzewcze. Za uszkodzenia niezgłoszonych instalacji Wykonawca nie ponosi odpowiedzialności.
+    </div>
+
+    <div class="sig-grid">
+      <div class="sig-box">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><strong>Podpis Pomiarowca</strong><button class="btn btn-sm btn-red no-print" onclick="clearCanvas('sigExec')">Wyczyść</button></div>
+        <canvas id="sigExec" class="sig-canvas"></canvas>
+      </div>
+      <div class="sig-box">
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><strong>Podpis Inwestora</strong><button class="btn btn-sm btn-red no-print" onclick="clearCanvas('sigClient')">Wyczyść</button></div>
+        <canvas id="sigClient" class="sig-canvas"></canvas>
+      </div>
+    </div>
+
+    <div class="next-bar no-print">
+      <button class="btn btn-white" style="border:1px solid #94a3b8;" onclick="showPage(2)">⬅️ Strona 2 (Szkice)</button>
+      <button class="btn btn-green" onclick="downloadPDF()">📥 Gotowe – Pobierz plik PDF</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const canvases = {};
+
+  function showPage(num) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page' + num).classList.add('active');
+    document.getElementById('tab' + num).classList.add('active');
+    window.scrollTo(0, 0);
+    if (num === 2) { resizeCanvas('cTop'); resizeCanvas('cSide'); }
+    if (num === 3) { resizeCanvas('sigExec'); resizeCanvas('sigClient'); }
+  }
+
+  function resizeCanvas(id) {
+    const item = canvases[id];
+    if (!item || item.initialized) return;
+    const rect = item.canvas.parentElement.getBoundingClientRect();
+    if (rect.width > 0) {
+      const oldData = item.canvas.toDataURL();
+      item.canvas.width = rect.width;
+      item.ctx.lineCap = 'round';
+      item.ctx.lineJoin = 'round';
+      item.ctx.lineWidth = item.lineWidth;
+      item.ctx.strokeStyle = item.color;
+      const img = new Image();
+      img.onload = () => item.ctx.drawImage(img, 0, 0);
+      img.src = oldData;
+      item.initialized = true;
+    }
+  }
+
+  function initCanvas(id, lineWidth = 2.4) {
+    const canvas = document.getElementById(id);
+    const ctx = canvas.getContext('2d');
+    canvas.width = 800;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = '#0f172a';
+    canvases[id] = { canvas, ctx, color: '#0f172a', lineWidth, drawing: false, history: [], initialized: false };
+
+    const getPos = (e) => {
+      const r = canvas.getBoundingClientRect();
+      const pt = (e.touches && e.touches.length > 0) ? e.touches : e;
+      return { x: (pt.clientX - r.left) * (canvas.width / r.width), y: (pt.clientY - r.top) * (canvas.height / r.height) };
+    };
+
+    const start = (e) => {
+      if (e.cancelable) e.preventDefault();
+      canvases[id].history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      if (canvases[id].history.length > 15) canvases[id].history.shift();
+      canvases[id].drawing = true;
+      const p = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x + 0.1, p.y + 0.1);
+      ctx.stroke();
+    };
+
+    const move = (e) => {
+      if (!canvases[id].drawing) return;
+      if (e.cancelable) e.preventDefault();
+      const p = getPos(e);
+      ctx.strokeStyle = canvases[id].color;
+      ctx.lineWidth = canvases[id].lineWidth;
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    };
+
+    const end = () => { canvases[id].drawing = false; };
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+    canvas.addEventListener('touchstart', start, { passive: false });
+    canvas.addEventListener('touchmove', move, { passive: false });
+    canvas.addEventListener('touchend', end);
+  }
+
+  function setColor(id, color, el) {
+    canvases[id].color = color;
