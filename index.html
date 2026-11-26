@@ -26,16 +26,20 @@
   .container { max-width: 920px; margin: 12px auto; padding: 0 10px 50px; }
   .page { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; display: none; }
   .page.active { display: block; }
-  .pdf-mode .page { display: block !important; box-shadow: none; border: none; margin-bottom: 0; page-break-after: always; }
-  .pdf-mode .page:last-child { page-break-after: auto; }
+
+  /* Tryb generowania PDF - 3 osobne kontenery renderowane po kolei */
+  .pdf-mode { max-width: 780px !important; margin: 0 !important; padding: 0 !important; }
+  .pdf-mode .page { display: block !important; box-shadow: none !important; border: none !important; margin: 0 !important; padding: 8px 10px !important; }
   .pdf-mode .no-print { display: none !important; }
+  .pdf-mode input, .pdf-mode select, .pdf-mode textarea { border: 1px solid #cbd5e1; padding: 4px 6px; font-size: 12px; }
+
   .doc-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; border-bottom: 2.5px solid var(--primary); padding-bottom: 10px; margin-bottom: 12px; gap: 10px; }
   .brand-box { display: flex; align-items: center; gap: 10px; }
   .company-name { font-size: 15px; font-weight: 800; color: var(--primary); }
   .company-info { font-size: 11px; line-height: 1.35; color: #334155; }
-  .sec-hdr { background: var(--primary); color: #fff; font-weight: 700; font-size: 12px; padding: 7px 10px; text-transform: uppercase; letter-spacing: 0.4px; margin: 14px 0 8px; border-radius: 4px; }
-  table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-  td, th { border: 1px solid var(--border); padding: 7px 8px; vertical-align: middle; }
+  .sec-hdr { background: var(--primary); color: #fff; font-weight: 700; font-size: 12px; padding: 7px 10px; text-transform: uppercase; letter-spacing: 0.4px; margin: 12px 0 8px; border-radius: 4px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+  td, th { border: 1px solid var(--border); padding: 6px 8px; vertical-align: middle; }
   th { background: var(--primary-light); color: var(--primary); font-weight: 700; text-align: left; font-size: 12px; }
   .lbl { background: #f8fafc; font-weight: 600; color: #334155; width: 26%; font-size: 12.5px; }
   input[type="text"], input[type="number"], input[type="date"], select, textarea { width: 100%; border: 1px solid #cbd5e1; border-radius: 5px; padding: 8px; font-size: 14px; color: #0f172a; background: #fff; }
@@ -49,15 +53,15 @@
   .canvas-wrap { border: 1.5px solid var(--primary); border-radius: 0 0 6px 6px; background-color: #fff; background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px); background-size: 20px 20px; touch-action: none; overflow: hidden; }
   canvas { display: block; width: 100%; touch-action: none; }
   .photo-box { border: 2px dashed var(--primary); background: var(--primary-light); border-radius: 8px; padding: 14px; text-align: center; margin-bottom: 10px; }
-  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
-  .photo-card { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #fff; position: relative; }
-  .photo-card img { width: 100%; height: 160px; object-fit: cover; border-radius: 4px; display: block; margin-bottom: 6px; }
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+  .photo-card { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #fff; position: relative; break-inside: avoid; }
+  .photo-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; display: block; margin-bottom: 6px; }
   .photo-del { position: absolute; top: 12px; right: 12px; background: #dc2626; color: #fff; border: none; border-radius: 4px; padding: 5px 9px; font-size: 12px; font-weight: 700; }
-  .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+  .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; break-inside: avoid; }
   @media (max-width: 600px) { .sig-grid { grid-template-columns: 1fr; } .lbl { width: 34%; } }
   .sig-box { border: 1px solid var(--border); border-radius: 6px; padding: 8px; background: #f8fafc; }
-  .sig-canvas { background: #fff; border: 1px dashed #94a3b8; border-radius: 4px; height: 110px; width: 100%; touch-action: none; }
-  .clause { background: #f8fafc; border-left: 3.5px solid var(--primary); padding: 8px 10px; font-size: 11.5px; color: #334155; line-height: 1.4; margin: 10px 0; }
+  .sig-canvas { background: #fff; border: 1px dashed #94a3b8; border-radius: 4px; height: 100px; width: 100%; touch-action: none; }
+  .clause { background: #f8fafc; border-left: 3.5px solid var(--primary); padding: 8px 10px; font-size: 11.5px; color: #334155; line-height: 1.4; margin: 10px 0; break-inside: avoid; }
   .next-bar { display: flex; justify-content: space-between; margin-top: 16px; gap: 10px; }
   @media print { body { background: #fff; } .topbar, .sketch-bar, .photo-box, .photo-del, .next-bar, .no-print { display: none !important; } .container { max-width: 100%; margin: 0; padding: 0; } .page { display: block !important; box-shadow: none; border: none; margin: 0; page-break-after: always; } .page:last-child { page-break-after: auto; } }
 </style>
@@ -156,7 +160,7 @@
       <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cTop')">↩️ Cofnij</button>
       <button class="btn btn-sm btn-red" onclick="clearCanvas('cTop')">Wyczyść</button>
     </div>
-    <div class="canvas-wrap"><canvas id="cTop" height="360"></canvas></div>
+    <div class="canvas-wrap"><canvas id="cTop" height="330"></canvas></div>
 
     <div class="sec-hdr">B. Przekrój boczny i widok elewacji (H1 / H2, spadek, ocieplenie, kliny)</div>
     <div class="sketch-bar no-print">
@@ -166,7 +170,7 @@
       <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('cSide')">↩️ Cofnij</button>
       <button class="btn btn-sm btn-red" onclick="clearCanvas('cSide')">Wyczyść</button>
     </div>
-    <div class="canvas-wrap"><canvas id="cSide" height="340"></canvas></div>
+    <div class="canvas-wrap"><canvas id="cSide" height="310"></canvas></div>
 
     <div class="next-bar no-print">
       <button class="btn btn-white" style="border:1px solid #94a3b8;" onclick="showPage(1)">⬅️ Strona 1</button>
@@ -327,17 +331,30 @@
     Array.from(event.target.files).forEach(file => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const card = document.createElement('div');
-        card.className = 'photo-card';
-        card.innerHTML = `<button class="photo-del no-print" onclick="this.parentElement.remove()">✕</button><img src="${e.target.result}"><input type="text" placeholder="Opis zdjęcia (np. elewacja, rynna)...">`;
-        grid.appendChild(card);
+        const img = new Image();
+        img.onload = () => {
+          // Kompresja zdjecia aby PDF nie przekraczal limitu pamieci na Androidzie
+          const maxW = 900;
+          const scale = img.width > maxW ? maxW / img.width : 1;
+          const tmpC = document.createElement('canvas');
+          tmpC.width = img.width * scale;
+          tmpC.height = img.height * scale;
+          tmpC.getContext('2d').drawImage(img, 0, 0, tmpC.width, tmpC.height);
+          const compressed = tmpC.toDataURL('image/jpeg', 0.78);
+
+          const card = document.createElement('div');
+          card.className = 'photo-card';
+          card.innerHTML = `<button class="photo-del no-print" onclick="this.parentElement.remove()">✕</button><img src="${compressed}"><input type="text" placeholder="Opis zdjęcia (np. elewacja, rynna)...">`;
+          grid.appendChild(card);
+        };
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     });
     event.target.value = '';
   }
 
-  function downloadPDF() {
+  async function downloadPDF() {
     const btn = document.getElementById('pdfBtn');
     const root = document.getElementById('pdfRoot');
     const clientName = (document.getElementById('c_name').value || 'Klient').trim().replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ_-]/g, '_');
@@ -349,29 +366,44 @@
       return;
     }
 
-    btn.textContent = '⏳ Generowanie PDF...';
+    btn.textContent = '⏳ Generowanie (1/3)...';
     btn.disabled = true;
     root.classList.add('pdf-mode');
 
-    const opt = {
-      margin: 6,
-      filename: `Karta_Pomiarowa_${clientName}.pdf`,
-      image: { type: 'jpeg', quality: 0.95 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] }
-    };
+    // Przeliczenie szerokosci canvasow przed renderowaniem
+    ['cTop', 'cSide', 'sigExec', 'sigClient'].forEach(resizeCanvas);
+    await new Promise(r => setTimeout(r, 150));
 
-    html2pdf().set(opt).from(root).save().then(() => {
-      root.classList.remove('pdf-mode');
-      btn.textContent = '📥 Pobierz PDF';
-      btn.disabled = false;
-    }).catch(() => {
-      root.classList.remove('pdf-mode');
-      btn.textContent = '📥 Pobierz PDF';
-      btn.disabled = false;
+    try {
+      const pages = [
+        document.getElementById('page1'),
+        document.getElementById('page2'),
+        document.getElementById('page3')
+      ];
+
+      let worker = html2pdf().set({
+        margin: 6,
+        filename: `Karta_Pomiarowa_${clientName}.pdf`,
+        image: { type: 'jpeg', quality: 0.90 },
+        html2canvas: { scale: 1.5, useCORS: true, logging: false, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      }).from(pages[0]).toPdf();
+
+      for (let i = 1; i < pages.length; i++) {
+        btn.textContent = `⏳ Generowanie (${i + 1}/3)...`;
+        worker = worker.get('pdf').then(pdf => {
+          pdf.addPage();
+        }).from(pages[i]).toContainer().toCanvas().toPdf();
+      }
+
+      await worker.save();
+    } catch (err) {
       window.print();
-    });
+    } finally {
+      root.classList.remove('pdf-mode');
+      btn.textContent = '📥 Pobierz PDF';
+      btn.disabled = false;
+    }
   }
 
   function saveForm() {
