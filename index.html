@@ -6,7 +6,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#06357A">
 <title>MMTarasy – Karta Pomiarowa</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cloudflare.com"></script>
 <style>
   :root { --primary: #06357A; --primary-light: #eef3fa; --border: #94a3b8; --bg: #f1f5f9; --text: #1e293b; }
   * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
@@ -102,24 +102,11 @@
     page-break-after: auto !important;
     break-after: auto !important;
   }
-  body.pdf-export-mode .canvas-wrap {
-    border-radius: 6px !important;
-  }
-  body.pdf-export-mode input,
-  body.pdf-export-mode select,
-  body.pdf-export-mode textarea {
-    border: 1px solid #cbd5e1 !important;
-    background: #fff !important;
-    padding: 4px 6px !important;
-    font-size: 12.5px !important;
-  }
-  body.pdf-export-mode td,
-  body.pdf-export-mode th {
-    padding: 4px 6px !important;
-  }
-  body.pdf-export-mode .sec-hdr {
-    margin: 8px 0 5px !important;
-    padding: 5px 8px !important;
+  body.pdf-export-mode .canvas-wrap { border-radius: 6px !important; }
+  body.pdf-export-mode input, body.pdf-export-mode textarea, body.pdf-export-mode select {
+    border: none !important;
+    background: transparent !important;
+    padding: 2px 4px !important;
   }
 </style>
 </head>
@@ -127,141 +114,46 @@
 
 <div class="topbar no-print">
   <div class="topbar-row">
-    <div class="app-brand">📐 MMTarasy – Pomiar</div>
+    <div class="app-brand">📐 MMTarasy – Karta Pomiarowa</div>
     <div class="actions">
-      <button class="btn btn-white" onclick="saveForm()">💾 Zapisz</button>
-      <button class="btn btn-green" id="pdfBtn" onclick="downloadPDF()">📥 Pobierz PDF</button>
-      <button class="btn btn-red" onclick="resetAll()">🗑️ Nowy</button>
+      <button class="btn btn-white btn-sm" onclick="saveForm()">💾 Zapisz kopię</button>
+      <button class="btn btn-white btn-sm" onclick="loadForm()">📂 Wczytaj</button>
+      <button class="btn btn-green btn-sm" id="pdfBtn" onclick="downloadPDF()">📥 Pobierz PDF</button>
     </div>
   </div>
   <div class="tabs">
     <button class="tab-btn active" id="tab1" onclick="showPage(1)">1. Dane i Wymiary</button>
-    <button class="tab-btn" id="tab2" onclick="showPage(2)">2. Szkice: Góra i Przód</button>
-    <button class="tab-btn" id="tab3" onclick="showPage(3)">3. Szkice: Boki P i L</button>
-    <button class="tab-btn" id="tab4" onclick="showPage(4)">4. Zabudowy i Zdjęcia</button>
+    <button class="tab-btn" id="tab2" onclick="showPage(2)">2. Rzut Góra + Przód</button>
+    <button class="tab-btn" id="tab3" onclick="showPage(3)">3. Boki P i L</button>
+    <button class="tab-btn" id="tab4" onclick="showPage(4)">4. Zabudowa + PDF</button>
   </div>
 </div>
 
 <div class="container" id="pdfRoot">
-  <!-- STRONA 1 -->
+  <!-- STRONA 1: DANE I WYMIARY -->
   <div class="page active" id="page1">
     <div class="doc-header">
       <div class="brand-box">
-        <svg width="50" height="50" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <svg width="50" height="50" viewBox="0 0 120 120" xmlns="http://w3.org">
           <path d="M22 52 L60 15 L108 62" fill="none" stroke="#06357A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
           <text x="60" y="76" text-anchor="middle" font-family="Arial Black, sans-serif" font-weight="900" font-size="38" fill="#06357A">M&amp;M</text>
           <path d="M35 88 L60 112 M50 88 L68 105 M65 88 L76 98 M80 88 L85 92" fill="none" stroke="#06357A" stroke-width="6" stroke-linecap="round"/>
         </svg>
-        <div class="company-info">
-          <div class="company-name">MMTarasy | MMProsperity Sp. z o.o.</div>
-          ul. Wrocławska 244, 45-960 Opole-Wrzoski | NIP: 991-056-02-03<br>
-          Tel.: +48 726 651 234 | kontakt@mmtarasy.pl | www.mmtarasy.pl
-        </div>
-      </div>
-      <div>
-        <strong>KARTA POMIAROWA</strong><br>
-        Data: <input type="date" id="m_date" style="width:130px; display:inline-block;">
-        Nr: <input type="text" id="m_no" placeholder="01/2026" style="width:75px; display:inline-block;">
-      </div>
-    </div>
-
-    <div class="sec-hdr">1. Dane Inwestora i Miejsce Montażu</div>
-    <table>
-      <tr><td class="lbl">Inwestor:</td><td><input type="text" id="c_name" placeholder="Imię i nazwisko / Firma"></td></tr>
-      <tr><td class="lbl">Telefon / E-mail:</td><td><input type="text" id="c_phone" placeholder="+48 ... / email@..."></td></tr>
-      <tr><td class="lbl">Adres montażu:</td><td><input type="text" id="c_addr" placeholder="Miejscowość, ulica, nr domu"></td></tr>
-      <tr><td class="lbl">Stawka VAT:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="vat8"> <strong>8% VAT</strong> (dom do 300 m²)</label><label class="chk-lbl"><input type="checkbox" id="vat23"> <strong>23% VAT</strong> (firma/inne)</label><span>Pomiarowiec: <input type="text" id="measurer" style="width:135px; display:inline-block;"></span></div></td></tr>
-    </table>
-
-    <div class="sec-hdr">2. Specyfikacja Konstrukcji Głównej</div>
-    <table>
-      <tr><td class="lbl">System:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="sys_lux"> <strong>LUX LINE</strong> (2,7 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_smart"> <strong>SMART LINE</strong> (2,0 mm)</label><label class="chk-lbl"><input type="checkbox" id="sys_free"> Wolnostojąca</label></div></td></tr>
-      <tr><td class="lbl">Pokrycie dachu:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="cov_pc_o"> Poliwęglan 16mm Opal</label><label class="chk-lbl"><input type="checkbox" id="cov_pc_c"> Poliwęglan 16mm Bezbarwny</label><label class="chk-lbl"><input type="checkbox" id="cov_gl_c"> Szkło VSG 4.4.2 Bezbarwne</label><label class="chk-lbl"><input type="checkbox" id="cov_gl_m"> Szkło VSG Mleczne</label></div></td></tr>
-      <tr><td class="lbl">Kolor RAL / Odpływ:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="ral7016"> 7016</label><label class="chk-lbl"><input type="checkbox" id="ral9005"> 9005</label><label class="chk-lbl"><input type="checkbox" id="ral9016"> 9016</label><input type="text" id="ral_other" placeholder="Inny" style="width:65px;"><span>| Odpływ:</span><label class="chk-lbl"><input type="checkbox" id="dr_l"> Lewy</label><label class="chk-lbl"><input type="checkbox" id="dr_p"> Prawy</label><label class="chk-lbl"><input type="checkbox" id="dr_g"> Grunt</label></div></td></tr>
-    </table>
-
-    <div class="sec-hdr">3. Wymiary Rzeczywiste z Natury [cm]</div>
-    <table>
-      <tr><th>Parametr</th><th style="width:105px; text-align:center;">Wymiar [cm]</th><th>Uwagi</th></tr>
-      <tr><td><strong>Szerokość przy ścianie (W1)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_w1" placeholder="cm"></td><td><input type="text" id="note_w1"></td></tr>
-      <tr><td><strong>Szerokość na froncie (W2)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_w2" placeholder="cm"></td><td><input type="text" id="note_w2"></td></tr>
-      <tr><td><strong>Głębokość / wysięg (D)</strong> (L / P)</td><td style="text-align:center;"><input type="text" class="dim-input" id="dim_d" placeholder="L / P"></td><td><input type="text" id="note_d"></td></tr>
-      <tr><td><strong>Wysokość ściany (H1)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_h1" placeholder="cm"></td><td><input type="text" id="note_h1"></td></tr>
-      <tr><td><strong>Wysokość pod rynną (H2)</strong></td><td style="text-align:center;"><input type="number" class="dim-input" id="dim_h2" placeholder="cm"></td><td><input type="text" id="note_h2" placeholder="Min. 210–220 cm pod zabudowę"></td></tr>
-      <tr><td><strong>Słupy [szt.] / Przekątne [cm]</strong></td><td style="text-align:center;"><input type="text" class="dim-input" id="dim_posts" placeholder="szt."></td><td><input type="text" id="note_diag" placeholder="Przekątne A / B [cm]"></td></tr>
-    </table>
-
-    <div class="sec-hdr">4. Ściana Nośna, Ocieplenie i Podłoże</div>
-    <table>
-      <tr><td class="lbl">Ściana / Ocieplenie:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="w_cer"> Porotherm/Cegła</label><label class="chk-lbl"><input type="checkbox" id="w_sil"> Silikat/Beton</label><label class="chk-lbl"><input type="checkbox" id="w_yt"> Gazobeton</label><span>Ocieplenie: <input type="number" id="ins_cm" style="width:60px; display:inline-block;" placeholder="cm"> cm</span></div></td></tr>
-      <tr><td class="lbl">Kolizje na elewacji:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="col_r"> Rynna</label><label class="chk-lbl"><input type="checkbox" id="col_k"> Klima/Lampy</label><label class="chk-lbl"><input type="checkbox" id="col_p"> Rolety/Podbitka</label><input type="text" id="col_txt" placeholder="Opis i wymiary kolizji w cm..." style="width:190px;"></div></td></tr>
-      <tr><td class="lbl">Podłoże pod słupy:</td><td><div class="inline-group"><label class="chk-lbl"><input type="checkbox" id="g_paver"> Kostka</label><label class="chk-lbl"><input type="checkbox" id="g_slab"> Płyta betonowa</label><label class="chk-lbl"><input type="checkbox" id="g_comp"> Kompozyt/Drewno</label><label class="chk-lbl"><input type="checkbox" id="g_soil"> Grunt (stopy 40×40×80 cm)</label></div></td></tr>
-    </table>
-
-    <div class="next-bar no-print">
-      <span></span>
-      <button class="btn btn-white" style="border:2px solid var(--primary);" onclick="showPage(2)">Dalej: Strona 2 (Rzut z góry i Przód) ➡️</button>
-    </div>
-  </div>
-
-  <!-- STRONA 2: RZUT Z GÓRY + WIDOK Z PRZODU -->
-  <div class="page" id="page2">
+        <div class="company-info">  <div class="page" id="page4">
     <div class="doc-header">
-      <div class="brand-box"><div class="company-name">MMTarasy – Szkice Techniczne: Rzut z góry i Przód [cm]</div></div>
-      <div>Strona 2 / 4</div>
-    </div>
-
-    <div class="sec-hdr">A. Rzut z góry (obrys domu, słupy, odpływ wody, krokwie i szyby, strony L / F / P)</div>
-    <div class="sketch-bar no-print" id="bar_cTop"></div>
-    <div class="canvas-wrap"><canvas id="cTop" width="750" height="390"></canvas></div>
-
-    <div class="sec-hdr">B. Widok z przodu (elewacja frontowa, rozstaw słupów, belka rynnowa, wysokość H2)</div>
-    <div class="sketch-bar no-print" id="bar_cFront"></div>
-    <div class="canvas-wrap"><canvas id="cFront" width="750" height="390"></canvas></div>
-
-    <div class="next-bar no-print">
-      <button class="btn btn-white" style="border:1px solid #94a3b8;" onclick="showPage(1)">⬅️ Strona 1 (Dane)</button>
-      <button class="btn btn-white" style="border:2px solid var(--primary);" onclick="showPage(3)">Dalej: Strona 3 (Boki P i L) ➡️</button>
-    </div>
-  </div>
-
-  <!-- STRONA 3: WIDOK BOK PRAWY + WIDOK BOK LEWY -->
-  <div class="page" id="page3">
-    <div class="doc-header">
-      <div class="brand-box"><div class="company-name">MMTarasy – Szkice Techniczne: Boki Prawy i Lewy [cm]</div></div>
-      <div>Strona 3 / 4</div>
-    </div>
-
-    <div class="sec-hdr">C. Widok bok prawy (P) (wysięg D, spadek H1 / H2, klin prawy, ocieplenie, odpływ)</div>
-    <div class="sketch-bar no-print" id="bar_cRight"></div>
-    <div class="canvas-wrap"><canvas id="cRight" width="750" height="390"></canvas></div>
-
-    <div class="sec-hdr">D. Widok bok lewy (L) (wysięg D, spadek H1 / H2, klin lewy, ocieplenie, odpływ)</div>
-    <div class="sketch-bar no-print" id="bar_cLeft"></div>
-    <div class="canvas-wrap"><canvas id="cLeft" width="750" height="390"></canvas></div>
-
-    <div class="next-bar no-print">
-      <button class="btn btn-white" style="border:1px solid #94a3b8;" onclick="showPage(2)">⬅️ Strona 2 (Góra i Przód)</button>
-      <button class="btn btn-white" style="border:2px solid var(--primary);" onclick="showPage(4)">Dalej: Strona 4 (Zabudowy i Zdjęcia) ➡️</button>
-    </div>
-  </div>
-
-  <!-- STRONA 4: ZABUDOWY, ZDJĘCIA I PODPISY -->
-  <div class="page" id="page4">
-    <div class="doc-header">
-      <div class="brand-box"><div class="company-name">MMTarasy – Zabudowy Boczne, Dodatki i Zdjęcia</div></div>
+      <div class="brand-box"><div class="company-name">MMTarasy – Zabudowa Ścian, Zdjęcia i Akceptacja</div></div>
       <div>Strona 4 / 4</div>
     </div>
 
-    <div class="sec-hdr">5. Specyfikacja Zabudów Bocznych i Dodatków [cm]</div>
+    <div class="sec-hdr">5. Specyfikacja Zabudowy Ścian i Dodatków [cm]</div>
     <table>
       <tr>
-        <th style="width:12%;">Strona</th>
-        <th style="width:32%;">System zabudowy</th>
-        <th style="width:14%;">Szer. góra</th>
-        <th style="width:14%;">Szer. dół</th>
-        <th style="width:14%;">Wys. H</th>
-        <th style="width:14%;">Tor / Uwagi</th>
+        <th style="width:14%;">Ściana</th>
+        <th style="width:36%;">System zabudowy</th>
+        <th style="width:12%;">Szer. góra</th>
+        <th style="width:12%;">Szer. dół</th>
+        <th style="width:13%;">Wys. L / P</th>
+        <th style="width:13%;">Tory / Uwagi</th>
       </tr>
       <tr>
         <td><strong>FRONT (F)</strong></td>
@@ -276,10 +168,10 @@
         <td><input type="number" id="f_wt" placeholder="cm"></td>
         <td><input type="number" id="f_wb" placeholder="cm"></td>
         <td><input type="text" id="f_h" placeholder="L / P"></td>
-        <td><input type="text" id="f_tr" placeholder="4-tor."></td>
+        <td><input type="text" id="f_tr" placeholder="3-tor."></td>
       </tr>
       <tr>
-        <td><strong>LEWY (L)</strong></td>
+        <td><strong>LEWA (L)</strong></td>
         <td>
           <div class="chk-list">
             <label class="chk-lbl"><input type="checkbox" id="l_sys_sz"> Szyby przesuwne 10mm</label>
@@ -294,7 +186,7 @@
         <td><input type="text" id="l_tr" placeholder="3-tor."></td>
       </tr>
       <tr>
-        <td><strong>PRAWY (P)</strong></td>
+        <td><strong>PRAWA (P)</strong></td>
         <td>
           <div class="chk-list">
             <label class="chk-lbl"><input type="checkbox" id="r_sys_sz"> Szyby przesuwne 10mm</label>
@@ -362,572 +254,53 @@
   const ALL_CANVAS_IDS = ['cTop', 'cFront', 'cRight', 'cLeft', 'sigExec', 'sigClient'];
   let currentPage = 1;
 
+  const PX_PER_CM = 2; // Skala: 20 px (1 kratka siatki) = 10 cm -> 1 cm = 2 px
+
+  const PROFILE_DEFS = {
+    // Rzut z góry
+    top_rafter_6:   { widthCm: 6,  label: 'Krokiew 6cm', fill: 'rgba(148, 163, 184, 0.35)' },
+    top_gutter_16:  { widthCm: 16, label: 'RYNNA 16cm', fill: 'rgba(30, 41, 59, 0.22)' },
+    top_wall_5:     { widthCm: 5,  label: 'Prof. ścienny 5cm', fill: 'rgba(71, 85, 105, 0.35)' },
+    top_beam_10:    { widthCm: 10, label: 'Belka konstr. 10cm', fill: 'rgba(203, 213, 225, 0.45)', dashed: true },
+
+    // Przód i boki
+    front_gutter_17:{ widthCm: 17, label: 'RYNNA (17 cm)', fill: 'rgba(30, 41, 59, 0.25)', forceHoriz: true },
+    prof_15x15:     { widthCm: 15, label: '15×15 cm', fill: 'rgba(100, 116, 139, 0.28)' },
+    prof_10x10:     { widthCm: 10, label: '10×10 cm', fill: 'rgba(100, 116, 139, 0.28)' },
+    prof_5x10:      { widthCm: 5,  label: '5×10 cm',  fill: 'rgba(100, 116, 139, 0.28)' },
+    prof_2x10:      { widthCm: 2,  label: '2×10 cm',  fill: 'rgba(100, 116, 139, 0.35)' },
+    prof_15x10_h:   { widthCm: 15, label: '15×10 cm (poz.)', fill: 'rgba(71, 85, 105, 0.30)', forceHoriz: true }
+  };
+
   function buildToolbar(id) {
     const bar = document.getElementById('bar_' + id);
     if (!bar) return;
-    bar.innerHTML = `
-      <div class="tool-row">
-        <button class="mode-btn active" data-mode="line" onclick="setMode('${id}','line',this)">📏 Linia</button>
-        <button class="mode-btn" data-mode="dim" onclick="setMode('${id}','dim',this)">↔️ Wymiar</button>
+
+    let specificButtons = '';
+
+    if (id === 'cTop') {
+      specificButtons = `
         <button class="mode-btn" data-mode="roof" onclick="setMode('${id}','roof',this)">🪟 Krokwie/Szyby</button>
-        <button class="mode-btn" data-mode="free" onclick="setMode('${id}','free',this)">✏️ Odręcznie</button>
+        <button class="mode-btn" data-mode="top_rafter_6" onclick="setMode('${id}','top_rafter_6',this)">➖ Krokiew 6cm</button>
+        <button class="mode-btn" data-mode="top_gutter_16" onclick="setMode('${id}','top_gutter_16',this)">▭ Rynna 16cm</button>
+        <button class="mode-btn" data-mode="top_wall_5" onclick="setMode('${id}','top_wall_5',this)">🧱 Prof. ścienny 5cm</button>
+        <button class="mode-btn" data-mode="top_beam_10" onclick="setMode('${id}','top_beam_10',this)">📏 Belka za prof. 10cm</button>
         <div class="tool-sep"></div>
         <button class="mode-btn" data-mode="post_wide" onclick="setMode('${id}','post_wide',this)">⬛ Słup szer.</button>
         <button class="mode-btn" data-mode="post_narrow" onclick="setMode('${id}','post_narrow',this)">▪️ Słup wąs.</button>
         <button class="mode-btn" data-mode="post_drain" onclick="setMode('${id}','post_drain',this)">💧 Słup+odw.</button>
-      </div>
-      <div class="tool-row">
-        <div class="dot active" style="background:#0f172a;" onclick="setColor('${id}','#0f172a',this)"></div>
-        <div class="dot" style="background:#dc2626;" onclick="setColor('${id}','#dc2626',this)"></div>
-        <div class="dot" style="background:#2563eb;" onclick="setColor('${id}','#2563eb',this)"></div>
-        <div class="dot" style="background:#16a34a;" onclick="setColor('${id}','#16a34a',this)"></div>
+      `;
+    } else if (id === 'cFront') {
+      specificButtons = `
+        <button class="mode-btn" data-mode="front_gutter_17" onclick="setMode('${id}','front_gutter_17',this)">▭ Belka przednia: RYNNA 17cm</button>
         <div class="tool-sep"></div>
-        <select class="thick-sel" onchange="setThickness('${id}', this.value)" title="Grubość kreski">
-          <option value="1.6">Cienka</option>
-          <option value="2.6" selected>Średnia</option>
-          <option value="4.2">Gruba</option>
-        </select>
-        <button class="snap-btn active" id="snap_${id}" onclick="toggleSnap('${id}',this)">🧲 Siatka</button>
-        <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('${id}')">↩️ Cofnij</button>
-        <button class="btn btn-sm btn-red" onclick="clearCanvas('${id}')">Wyczyść</button>
-      </div>
-    `;
-  }
+        <button class="mode-btn" data-mode="prof_15x15" onclick="setMode('${id}','prof_15x15',this)">▮ 15×15</button>
+        <button class="mode-btn" data-mode="prof_10x10" onclick="setMode('${id}','prof_10x10',this)">▮ 10×10</button>
+        <button class="mode-btn" data-mode="prof_5x10" onclick="setMode('${id}','prof_5x10',this)">▮ 5×10</button>
+        <button class="mode-btn" data-mode="prof_2x10" onclick="setMode('${id}','prof_2x10',this)">❘ 2×10</button>
+      `;
+    } else if (id === 'cRight' || id === 'cLeft') {
+      specificButtons = `
+        <button class="mode-btn" data-mode="prof_15x15" onclick="setMode('${id}','prof_15x15',this)">▮ 15×15</button>
+        <button class="mode-btn" data-mode="prof_10x10" onclick="setMode('${id}','prof_10x10',this)">▮ 10×10</button>
 
-  function showPage(num) {
-    currentPage = num;
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('page' + num).classList.add('active');
-    document.getElementById('tab' + num).classList.add('active');
-    window.scrollTo(0, 0);
-  }
-
-  function snapCoord(val, grid = 20) {
-    return Math.round(val / grid) * grid;
-  }
-
-  function snapOrtho(x1, y1, x2, y2) {
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const dist = Math.hypot(dx, dy);
-    if (dist < 6) return { x: x2, y: y2 };
-    const angle = Math.abs(Math.atan2(dy, dx) * 180 / Math.PI);
-    if (angle < 7 || angle > 173) return { x: x2, y: y1 };
-    if (Math.abs(angle - 90) < 7) return { x: x1, y: y2 };
-    return { x: x2, y: y2 };
-  }
-
-  function drawDimensionLine(ctx, x1, y1, x2, y2, color, text) {
-    ctx.save();
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-    ctx.lineWidth = 1.6;
-    ctx.setLineDash([]);
-
-    // Linia główna
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-
-    const angle = Math.atan2(y2 - y1, x2 - x1);
-    const headLen = 9;
-
-    // Groty strzałek na obu końcach
-    const drawArrowHead = (px, py, ang) => {
-      ctx.beginPath();
-      ctx.moveTo(px, py);
-      ctx.lineTo(px - headLen * Math.cos(ang - Math.PI / 6), py - headLen * Math.sin(ang - Math.PI / 6));
-      ctx.lineTo(px - headLen * Math.cos(ang + Math.PI / 6), py - headLen * Math.sin(ang + Math.PI / 6));
-      ctx.closePath();
-      ctx.fill();
-    };
-    drawArrowHead(x2, y2, angle);
-    drawArrowHead(x1, y1, angle + Math.PI);
-
-    // Kreski pomocnicze na końcach
-    const perp = angle + Math.PI / 2;
-    const tick = 7;
-    [[x1, y1], [x2, y2]].forEach(([px, py]) => {
-      ctx.beginPath();
-      ctx.moveTo(px - tick * Math.cos(perp), py - tick * Math.sin(perp));
-      ctx.lineTo(px + tick * Math.cos(perp), py + tick * Math.sin(perp));
-      ctx.stroke();
-    });
-
-    if (text) {
-      const mx = (x1 + x2) / 2;
-      const my = (y1 + y2) / 2;
-      ctx.font = 'bold 13px Arial, sans-serif';
-      const metrics = ctx.measureText(text);
-      const pad = 4;
-      const bw = metrics.width + pad * 2;
-      const bh = 18;
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(mx - bw / 2, my - bh / 2, bw, bh);
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1;
-      ctx.strokeRect(mx - bw / 2, my - bh / 2, bw, bh);
-      ctx.fillStyle = color;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(text, mx, my + 0.5);
-    }
-    ctx.restore();
-  }
-
-  function drawRoofBayGrid(ctx, x1, y1, x2, y2, color, bays) {
-    const left = Math.min(x1, x2);
-    const right = Math.max(x1, x2);
-    const top = Math.min(y1, y2);
-    const bottom = Math.max(y1, y2);
-    const w = right - left;
-    const h = Math.max(bottom - top, 24);
-    const count = Math.max(1, Math.min(30, parseInt(bays, 10) || 4));
-    const step = w / count;
-
-    ctx.save();
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2.4;
-    ctx.setLineDash([]);
-
-    // Obrys dachu (belka przyścienna, rynnowa i krokwie skrajne)
-    ctx.strokeRect(left, top, w, h);
-
-    // Symetryczne krokwie pośrednie
-    for (let i = 1; i < count; i++) {
-      const rx = left + i * step;
-      ctx.beginPath();
-      ctx.moveTo(rx, top);
-      ctx.lineTo(rx, top + h);
-      ctx.stroke();
-    }
-
-    // Symbolika szyb dachowych (refleksy szkła / przekątne w każdym polu)
-    ctx.lineWidth = 1.1;
-    ctx.strokeStyle = '#0284c7';
-    for (let i = 0; i < count; i++) {
-      const bx = left + i * step;
-      const cx = bx + step / 2;
-      const cy = top + h / 2;
-      const rLen = Math.min(step * 0.28, h * 0.28, 16);
-      // Dwie równoległe ukośne kreski symbolizujące taflę szkła
-      ctx.beginPath();
-      ctx.moveTo(cx - rLen, cy + rLen * 0.6);
-      ctx.lineTo(cx + rLen * 0.4, cy - rLen * 0.8);
-      ctx.moveTo(cx - rLen * 0.3, cy + rLen * 0.9);
-      ctx.lineTo(cx + rLen, cy - rLen * 0.4);
-      ctx.stroke();
-    }
-
-    // Etykieta liczby pól na górze
-    ctx.font = 'bold 11px Arial, sans-serif';
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.fillText(`${count} pól (${count + 1} krokwi)`, left + w / 2, Math.max(12, top - 5));
-    ctx.restore();
-  }
-
-  function drawPostStamp(ctx, x, y, type, color) {
-    ctx.save();
-    ctx.setLineDash([]);
-    if (type === 'post_wide') {
-      const s = 26;
-      ctx.fillStyle = '#e2e8f0';
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2.6;
-      ctx.fillRect(x - s / 2, y - s / 2, s, s);
-      ctx.strokeRect(x - s / 2, y - s / 2, s, s);
-      // Krzyż przekątny
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.moveTo(x - s / 2, y - s / 2); ctx.lineTo(x + s / 2, y + s / 2);
-      ctx.moveTo(x + s / 2, y - s / 2); ctx.lineTo(x - s / 2, y + s / 2);
-      ctx.stroke();
-    } else if (type === 'post_narrow') {
-      const s = 16;
-      ctx.fillStyle = '#f1f5f9';
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2.2;
-      ctx.fillRect(x - s / 2, y - s / 2, s, s);
-      ctx.strokeRect(x - s / 2, y - s / 2, s, s);
-      ctx.beginPath();
-      ctx.arc(x, y, 2.2, 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.fill();
-    } else if (type === 'post_drain') {
-      const s = 26;
-      ctx.fillStyle = '#dbeafe';
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 2.6;
-      ctx.fillRect(x - s / 2, y - s / 2, s, s);
-      ctx.strokeRect(x - s / 2, y - s / 2, s, s);
-      // Rura spustowa w środku (niebieski okrąg + kropka)
-      ctx.strokeStyle = '#0284c7';
-      ctx.fillStyle = '#0284c7';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(x, y, 6.5, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-      ctx.fill();
-      // Podpis ODW
-      ctx.font = 'bold 9px Arial, sans-serif';
-      ctx.fillStyle = '#0369a1';
-      ctx.textAlign = 'center';
-      ctx.fillText('ODW', x, y + s / 2 + 10);
-    }
-    ctx.restore();
-  }
-
-  function initCanvas(id, defaultMode = 'line', lineWidth = 2.6) {
-    const canvas = document.getElementById(id);
-    const ctx = canvas.getContext('2d');
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.lineWidth = lineWidth;
-    ctx.strokeStyle = '#0f172a';
-
-    canvases[id] = {
-      canvas,
-      ctx,
-      color: '#0f172a',
-      lineWidth,
-      mode: defaultMode,
-      snap: SKETCH_IDS.includes(id),
-      drawing: false,
-      startX: 0,
-      startY: 0,
-      snapshot: null,
-      history: []
-    };
-
-    const getPos = (e) => {
-      const r = canvas.getBoundingClientRect();
-      const pt = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
-      let x = (pt.clientX - r.left) * (canvas.width / r.width);
-      let y = (pt.clientY - r.top) * (canvas.height / r.height);
-      if (canvases[id].snap && canvases[id].mode !== 'free') {
-        x = snapCoord(x, 20);
-        y = snapCoord(y, 20);
-      }
-      return { x, y };
-    };
-
-    const start = (e) => {
-      if (e.cancelable) e.preventDefault();
-      const state = canvases[id];
-      const p = getPos(e);
-
-      state.history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-      if (state.history.length > 25) state.history.shift();
-
-      // Stemple słupów stawiane jednym dotknięciem
-      if (['post_wide', 'post_narrow', 'post_drain'].includes(state.mode)) {
-        drawPostStamp(ctx, p.x, p.y, state.mode, state.color);
-        return;
-      }
-
-      state.drawing = true;
-      state.startX = p.x;
-      state.startY = p.y;
-      state.snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
-      if (state.mode === 'free') {
-        ctx.strokeStyle = state.color;
-        ctx.lineWidth = state.lineWidth;
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(p.x + 0.1, p.y + 0.1);
-        ctx.stroke();
-      }
-    };
-
-    const move = (e) => {
-      const state = canvases[id];
-      if (!state.drawing) return;
-      if (e.cancelable) e.preventDefault();
-      const p = getPos(e);
-
-      if (state.mode === 'free') {
-        ctx.strokeStyle = state.color;
-        ctx.lineWidth = state.lineWidth;
-        ctx.lineTo(p.x, p.y);
-        ctx.stroke();
-      } else {
-        ctx.putImageData(state.snapshot, 0, 0);
-        if (state.mode === 'line') {
-          const endPt = snapOrtho(state.startX, state.startY, p.x, p.y);
-          ctx.save();
-          ctx.strokeStyle = state.color;
-          ctx.lineWidth = state.lineWidth;
-          ctx.beginPath();
-          ctx.moveTo(state.startX, state.startY);
-          ctx.lineTo(endPt.x, endPt.y);
-          ctx.stroke();
-          ctx.restore();
-        } else if (state.mode === 'dim') {
-          const endPt = snapOrtho(state.startX, state.startY, p.x, p.y);
-          drawDimensionLine(ctx, state.startX, state.startY, endPt.x, endPt.y, state.color, '');
-        } else if (state.mode === 'roof') {
-          ctx.save();
-          ctx.strokeStyle = state.color;
-          ctx.lineWidth = 1.6;
-          ctx.setLineDash([5, 4]);
-          const left = Math.min(state.startX, p.x);
-          const top = Math.min(state.startY, p.y);
-          const w = Math.abs(p.x - state.startX);
-          const h = Math.max(Math.abs(p.y - state.startY), 24);
-          ctx.strokeRect(left, top, w, h);
-          ctx.restore();
-        }
-      }
-    };
-
-    const end = (e) => {
-      const state = canvases[id];
-      if (!state.drawing) return;
-      state.drawing = false;
-
-      if (state.mode === 'dim' || state.mode === 'roof') {
-        const ptSource = (e && e.changedTouches && e.changedTouches.length > 0) ? e.changedTouches[0] : e;
-        let endX = state.startX, endY = state.startY;
-        if (ptSource && typeof ptSource.clientX === 'number') {
-          const r = canvas.getBoundingClientRect();
-          endX = (ptSource.clientX - r.left) * (canvas.width / r.width);
-          endY = (ptSource.clientY - r.top) * (canvas.height / r.height);
-          if (state.snap) {
-            endX = snapCoord(endX, 20);
-            endY = snapCoord(endY, 20);
-          }
-        }
-        ctx.putImageData(state.snapshot, 0, 0);
-
-        if (state.mode === 'dim') {
-          const endPt = snapOrtho(state.startX, state.startY, endX, endY);
-          if (Math.hypot(endPt.x - state.startX, endPt.y - state.startY) > 10) {
-            const val = prompt('Podaj wymiar [cm] (np. 450):', '');
-            const label = val && val.trim() ? `${val.trim()} cm` : '';
-            drawDimensionLine(ctx, state.startX, state.startY, endPt.x, endPt.y, state.color, label);
-          } else {
-            state.history.pop();
-          }
-        } else if (state.mode === 'roof') {
-          if (Math.abs(endX - state.startX) > 20) {
-            const bays = prompt('Podaj liczbę pól / szyb dachowych (np. 4, 5, 6):', '5');
-            if (bays !== null) {
-              drawRoofBayGrid(ctx, state.startX, state.startY, endX, endY, state.color, bays);
-            } else {
-              state.history.pop();
-            }
-          } else {
-            state.history.pop();
-          }
-        }
-      }
-    };
-
-    canvas.addEventListener('mousedown', start);
-    canvas.addEventListener('mousemove', move);
-    window.addEventListener('mouseup', end);
-    canvas.addEventListener('touchstart', start, { passive: false });
-    canvas.addEventListener('touchmove', move, { passive: false });
-    canvas.addEventListener('touchend', end);
-  }
-
-  function setMode(id, mode, el) {
-    if (!canvases[id]) return;
-    canvases[id].mode = mode;
-    const bar = document.getElementById('bar_' + id);
-    if (bar) {
-      bar.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-    }
-    el.classList.add('active');
-  }
-
-  function toggleSnap(id, el) {
-    if (!canvases[id]) return;
-    canvases[id].snap = !canvases[id].snap;
-    el.classList.toggle('active', canvases[id].snap);
-  }
-
-  function setThickness(id, val) {
-    if (!canvases[id]) return;
-    canvases[id].lineWidth = parseFloat(val) || 2.6;
-  }
-
-  function setColor(id, color, el) {
-    canvases[id].color = color;
-    el.parentElement.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
-    el.classList.add('active');
-  }
-
-  function undoCanvas(id) {
-    const item = canvases[id];
-    if (item && item.history.length > 0) item.ctx.putImageData(item.history.pop(), 0, 0);
-  }
-
-  function clearCanvas(id) {
-    const item = canvases[id];
-    if (item) {
-      item.history.push(item.ctx.getImageData(0, 0, item.canvas.width, item.canvas.height));
-      item.ctx.clearRect(0, 0, item.canvas.width, item.canvas.height);
-    }
-  }
-
-  function addPhotos(event) {
-    const grid = document.getElementById('photoGrid');
-    Array.from(event.target.files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          const maxDim = 900;
-          let w = img.width, h = img.height;
-          if (w > maxDim || h > maxDim) {
-            if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
-            else { w = Math.round(w * maxDim / h); h = maxDim; }
-          }
-          const c = document.createElement('canvas');
-          c.width = w; c.height = h;
-          c.getContext('2d').drawImage(img, 0, 0, w, h);
-          const compressedUrl = c.toDataURL('image/jpeg', 0.78);
-
-          const card = document.createElement('div');
-          card.className = 'photo-card';
-          card.innerHTML = `<button class="photo-del no-print" onclick="this.parentElement.remove()">✕</button><img src="${compressedUrl}"><input type="text" placeholder="Opis zdjęcia (np. elewacja, rynna)...">`;
-          grid.appendChild(card);
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-    event.target.value = '';
-  }
-
-  async function downloadPDF() {
-    const btn = document.getElementById('pdfBtn');
-    const rawInvestor = document.getElementById('c_name').value.trim();
-    const rawNo = document.getElementById('m_no').value.trim();
-
-    let baseName = 'Karta_Pomiarowa_MMTarasy';
-    if (rawInvestor) {
-      const cleanInv = rawInvestor.replace(/[/\?%*:|"<>]/g, '-').replace(/\s+/g, '_');
-      const cleanNo = rawNo ? '_' + rawNo.replace(/[/\?%*:|"<>]/g, '-').replace(/\s+/g, '_') : '';
-      baseName = `${cleanInv}${cleanNo}`;
-    }
-
-    if (typeof html2pdf === 'undefined') {
-      alert('Brak połączenia z biblioteką PDF. Sprawdź internet i spróbuj ponownie.');
-      return;
-    }
-
-    const savedPage = currentPage;
-    btn.textContent = '⏳ Generowanie PDF (A4)...';
-    btn.disabled = true;
-
-    window.scrollTo(0, 0);
-    document.body.classList.add('pdf-export-mode');
-
-    await new Promise(resolve => setTimeout(resolve, 250));
-
-    try {
-      const root = document.getElementById('pdfRoot');
-      const opt = {
-        margin: [0, 0, 0, 0],
-        filename: `${baseName}.pdf`,
-        image: { type: 'jpeg', quality: 0.94 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          logging: false,
-          scrollX: 0,
-          scrollY: 0,
-          x: 0,
-          y: 0,
-          width: 794,
-          windowWidth: 794
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] }
-      };
-
-      await html2pdf().set(opt).from(root).save();
-    } catch (err) {
-      alert('Wystąpił błąd podczas generowania PDF: ' + err.message);
-    } finally {
-      document.body.classList.remove('pdf-export-mode');
-      showPage(savedPage);
-      btn.textContent = '📥 Pobierz PDF';
-      btn.disabled = false;
-    }
-  }
-
-  function saveForm() {
-    const data = {};
-    document.querySelectorAll('input, select, textarea').forEach(el => {
-      if (el.id) data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
-    });
-    const drawings = {};
-    ALL_CANVAS_IDS.forEach(id => {
-      if (canvases[id]) drawings[id] = canvases[id].canvas.toDataURL();
-    });
-    try {
-      localStorage.setItem('mmtarasy_pomiar', JSON.stringify({ fields: data, drawings }));
-      alert('Zapisano kopię roboczą (pola + 4 szkice + podpisy)!');
-    } catch (e) {
-      alert('Zapisano pola formularza.');
-    }
-  }
-
-  function loadForm() {
-    try {
-      const raw = localStorage.getItem('mmtarasy_pomiar');
-      if (!raw) return;
-      const parsed = JSON.parse(raw);
-      const fields = parsed.fields || parsed;
-      Object.keys(fields).forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        if (el.type === 'checkbox') el.checked = fields[id];
-        else el.value = fields[id];
-      });
-      if (parsed.drawings) {
-        Object.keys(parsed.drawings).forEach(id => {
-          if (!canvases[id]) return;
-          const img = new Image();
-          img.onload = () => canvases[id].ctx.drawImage(img, 0, 0);
-          img.src = parsed.drawings[id];
-        });
-      }
-    } catch (e) {}
-  }
-
-  function resetAll() {
-    if (!confirm('Wyczyścić wszystkie dane i zacząć nowy pomiar?')) return;
-    try { localStorage.removeItem('mmtarasy_pomiar'); } catch (e) {}
-    document.querySelectorAll('input, select, textarea').forEach(el => {
-      if (el.type === 'checkbox') el.checked = false;
-      else if (el.type !== 'file') el.value = '';
-    });
-    document.getElementById('photoGrid').innerHTML = '';
-    ALL_CANVAS_IDS.forEach(clearCanvas);
-    document.getElementById('m_date').valueAsDate = new Date();
-    showPage(1);
-  }
-
-  window.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('m_date').valueAsDate = new Date();
-    SKETCH_IDS.forEach(id => {
-      buildToolbar(id);
-      initCanvas(id, 'line', 2.6);
-    });
-    initCanvas('sigExec', 'free', 2.0);
-    initCanvas('sigClient', 'free', 2.0);
-    loadForm();
-  });
-</script>
-</body>
-</html>
