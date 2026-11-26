@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#06357A">
+<title>MMTarasy – Szkicownik Techniczny</title>
+<style>
+  :root { --primary: #06357A; --primary-light: #eef3fa; --border: #94a3b8; --bg: #f1f5f9; --text: #1e293b; }
+  * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; }
+  body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-size: 14px; }
+  .topbar { position: sticky; top: 0; z-index: 1000; background: var(--primary); color: #fff; padding: 10px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+  .topbar-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .app-brand { font-weight: 800; font-size: 15px; }
+  .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .btn { border: none; border-radius: 6px; padding: 7px 11px; font-size: 12.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
+  .btn-green { background: #16a34a; color: #fff; }
+  .btn-white { background: #fff; color: var(--primary); }
+  .btn-red { background: #dc2626; color: #fff; }
+  .btn-blue { background: #0284c7; color: #fff; }
+  .btn-sm { padding: 5px 8px; font-size: 11.5px; }
+  .container { max-width: 960px; margin: 12px auto; padding: 0 10px 50px; }
+  .panel { background: #fff; border-radius: 8px; padding: 14px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #cbd5e1; }
+  .sec-hdr { background: var(--primary); color: #fff; font-weight: 700; font-size: 12px; padding: 6px 10px; text-transform: uppercase; letter-spacing: 0.4px; margin: 0 0 6px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; }
+  
+  /* Pasek szybkich wymiarów */
+  .dim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); gap: 8px; align-items: end; }
+  .dim-field label { display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 3px; }
+  .dim-field input { width: 100%; border: 1px solid #94a3b8; border-radius: 5px; padding: 6px 8px; font-size: 14px; font-weight: 800; color: var(--primary); text-align: center; }
+
+  /* Przybornik CAD */
+  .sketch-bar { display: flex; flex-direction: column; gap: 6px; background: #f8fafc; padding: 8px; border: 1px solid var(--border); border-bottom: none; border-radius: 6px 6px 0 0; }
+  .tool-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+  .tool-sep { width: 1px; height: 20px; background: #cbd5e1; margin: 0 2px; }
+  .dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #64748b; cursor: pointer; flex-shrink: 0; }
+  .dot.active { transform: scale(1.15); box-shadow: 0 0 0 2.5px #000; }
+  .mode-btn { border: 1px solid #94a3b8; background: #fff; color: #1e293b; border-radius: 5px; padding: 5px 8px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+  .mode-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .snap-btn { border: 1px solid #94a3b8; background: #fff; color: #334155; border-radius: 5px; padding: 5px 8px; font-size: 11.5px; font-weight: 700; cursor: pointer; }
+  .snap-btn.active { background: #0284c7; color: #fff; border-color: #0284c7; }
+  .thick-sel { border: 1px solid #94a3b8; border-radius: 5px; padding: 4px 6px; font-size: 11.5px; font-weight: 700; background: #fff; color: #0f172a; }
+
+  .canvas-wrap { border: 1.5px solid var(--primary); border-radius: 0 0 6px 6px; background-color: #fff; background-image: radial-gradient(#94a3b8 1.2px, transparent 1.2px); background-size: 20px 20px; touch-action: none; overflow: hidden; position: relative; }
+  canvas { display: block; width: 100%; touch-action: none; cursor: crosshair; }
+
+  @media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+    .container { max-width: 100%; margin: 0; padding: 0; }
+    .panel { box-shadow: none; border: none; padding: 4px 0; margin-bottom: 10px; page-break-inside: avoid; }
+    .canvas-wrap { border-radius: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar no-print">
+  <div class="topbar-row">
+    <div class="app-brand">📐 MMTarasy – Szkicownik Techniczny (1 kratka = 10 cm)</div>
+    <div class="actions">
+      <button class="btn btn-blue btn-sm" onclick="autoGenerateSketches(true)">🪄 Generuj obrysy z wymiarów</button>
+      <button class="btn btn-white btn-sm" onclick="saveSketches()">💾 Zapisz</button>
+      <button class="btn btn-white btn-sm" onclick="loadSketches()">📂 Wczytaj</button>
+      <button class="btn btn-green btn-sm" onclick="window.print()">🖨️ Drukuj / Zapisz PDF</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- PARAMETRY DO WSTĘPNEGO RYSOWANIA -->
+  <div class="panel no-print">
+    <div class="sec-hdr">Parametry bazowe do automatycznego obrysu [cm]</div>
+    <div class="dim-grid">
+      <div class="dim-field"><label>Szer. ściana W1 [cm]</label><input type="number" id="dim_w1" value="400"></div>
+      <div class="dim-field"><label>Szer. front W2 [cm]</label><input type="number" id="dim_w2" value="400"></div>
+      <div class="dim-field"><label>Wysięg D [cm]</label><input type="number" id="dim_d" value="300"></div>
+      <div class="dim-field"><label>Wys. ściana H1 [cm]</label><input type="number" id="dim_h1" value="280"></div>
+      <div class="dim-field"><label>Wys. rynna H2 [cm]</label><input type="number" id="dim_h2" value="220"></div>
+      <div class="dim-field"><label>Liczba słupów [szt.]</label><input type="number" id="dim_posts" value="2" min="1" max="8"></div>
+      <div><button class="btn btn-blue" style="width:100%; justify-content:center;" onclick="autoGenerateSketches(true)">🔄 Odśwież wstępne szkice</button></div>
+    </div>
+  </div>
+
+  <!-- A. RZUT Z GÓRY -->
+  <div class="panel">
+    <div class="sec-hdr">
+      <span>A. Rzut z góry [cm]</span>
+      <button class="btn btn-white btn-sm no-print" onclick="exportSinglePng('cTop', 'Rzut_z_gory')">📸 Pobierz PNG</button>
+    </div>
+    <div class="sketch-bar no-print" id="bar_cTop"></div>
+    <div class="canvas-wrap"><canvas id="cTop" width="880" height="420"></canvas></div>
+  </div>
+
+  <!-- B. WIDOK Z PRZODU -->
+  <div class="panel">
+    <div class="sec-hdr">
+      <span>B. Widok z przodu [cm]</span>
+      <button class="btn btn-white btn-sm no-print" onclick="exportSinglePng('cFront', 'Widok_z_przodu')">📸 Pobierz PNG</button>
+    </div>
+    <div class="sketch-bar no-print" id="bar_cFront"></div>
+    <div class="canvas-wrap"><canvas id="cFront" width="880" height="420"></canvas></div>
+  </div>
+
+  <!-- C. WIDOK BOK PRAWY -->
+  <div class="panel">
+    <div class="sec-hdr">
+      <span>C. Widok bok prawy (P) [cm]</span>
+      <button class="btn btn-white btn-sm no-print" onclick="exportSinglePng('cRight', 'Bok_prawy')">📸 Pobierz PNG</button>
+    </div>
+    <div class="sketch-bar no-print" id="bar_cRight"></div>
+    <div class="canvas-wrap"><canvas id="cRight" width="880" height="420"></canvas></div>
+  </div>
+
+  <!-- D. WIDOK BOK LEWY -->
+  <div class="panel">
+    <div class="sec-hdr">
+      <span>D. Widok bok lewy (L) [cm]</span>
+      <button class="btn btn-white btn-sm no-print" onclick="exportSinglePng('cLeft', 'Bok_lewy')">📸 Pobierz PNG</button>
+    </div>
+    <div class="sketch-bar no-print" id="bar_cLeft"></div>
+    <div class="canvas-wrap"><canvas id="cLeft" width="880" height="420"></canvas></div>
+  </div>
+</div>
+
+<script>
+  const canvases = {};
+  const SKETCH_IDS = ['cTop', 'cFront', 'cRight', 'cLeft'];
+  const PX_PER_CM = 2; // Skala robocza: 1 kratka (20 px) = 10 cm -> 1 cm = 2 px
+
+  const PROFILE_DEFS = {
+    // Rzut z góry
+    top_rafter_6:   { widthCm: 6,  label: 'Krokiew 6cm', fill: 'rgba(148, 163, 184, 0.35)' },
+    top_gutter_16:  { widthCm: 16, label: 'RYNNA 16cm', fill: 'rgba(30, 41, 59, 0.22)' },
+    top_wall_5:     { widthCm: 5,  label: 'Prof. ścienny 5cm', fill: 'rgba(71, 85, 105, 0.35)' },
+    top_beam_10:    { widthCm: 10, label: 'Belka konstr. 10cm', fill: 'rgba(203, 213, 225, 0.45)', dashed: true },
+
+    // Widok z przodu i z boku
+    front_gutter_17:{ widthCm: 17, label: 'RYNNA (17 cm)', fill: 'rgba(30, 41, 59, 0.25)', forceHoriz: true },
+    prof_15x15:     { widthCm: 15, label: '15×15 cm', fill: 'rgba(100, 116, 139, 0.28)' },
+    prof_10x10:     { widthCm: 10, label: '10×10 cm', fill: 'rgba(100, 116, 139, 0.28)' },
+    prof_5x10:      { widthCm: 5,  label: '5×10 cm',  fill: 'rgba(100, 116, 139, 0.28)' },
+    prof_2x10:      { widthCm: 2,  label: '2×10 cm',  fill: 'rgba(100, 116, 139, 0.35)' },
+    prof_15x10_h:   { widthCm: 15, label: '15×10 cm (poz.)', fill: 'rgba(71, 85, 105, 0.30)', forceHoriz: true }
+  };
+
+  function buildToolbar(id) {
+    const bar = document.getElementById('bar_' + id);
+    if (!bar) return;
+
+    let specificButtons = '';
+
+    if (id === 'cTop') {
+      specificButtons = `
+        <button class="mode-btn" data-mode="roof" onclick="setMode('${id}','roof',this)">🪟 Krokwie/Szyby</button>
+        <button class="mode-btn" data-mode="top_rafter_6" onclick="setMode('${id}','top_rafter_6',this)">➖ Krokiew 6cm</button>
+        <button class="mode-btn" data-mode="top_gutter_16" onclick="setMode('${id}','top_gutter_16',this)">▭ Rynna 16cm</button>
+        <button class="mode-btn" data-mode="top_wall_5" onclick="setMode('${id}','top_wall_5',this)">🧱 Prof. ścienny 5cm</button>
+        <button class="mode-btn" data-mode="top_beam_10" onclick="setMode('${id}','top_beam_10',this)">📏 Belka za prof. 10cm</button>
+        <div class="tool-sep"></div>
+        <button class="mode-btn" data-mode="post_wide" onclick="setMode('${id}','post_wide',this)">⬛ Słup szer.</button>
+        <button class="mode-btn" data-mode="post_narrow" onclick="setMode('${id}','post_narrow',this)">▪️ Słup wąs.</button>
+        <button class="mode-btn" data-mode="post_drain" onclick="setMode('${id}','post_drain',this)">💧 Słup+odw.</button>
+      `;
+    } else if (id === 'cFront') {
+      specificButtons = `
+        <button class="mode-btn" data-mode="front_gutter_17" onclick="setMode('${id}','front_gutter_17',this)">▭ Belka przednia: RYNNA 17cm</button>
+        <div class="tool-sep"></div>
+        <button class="mode-btn" data-mode="prof_15x15" onclick="setMode('${id}','prof_15x15',this)">▮ 15×15 (pion/poz)</button>
+        <button class="mode-btn" data-mode="prof_10x10" onclick="setMode('${id}','prof_10x10',this)">▮ 10×10 (pion/poz)</button>
+        <button class="mode-btn" data-mode="prof_5x10" onclick="setMode('${id}','prof_5x10',this)">▮ 5×10 (pion/poz)</button>
+        <button class="mode-btn" data-mode="prof_2x10" onclick="setMode('${id}','prof_2x10',this)">❘ 2×10 (pion/poz)</button>
+      `;
+    } else if (id === 'cRight' || id === 'cLeft') {
+      specificButtons = `
+        <button class="mode-btn" data-mode="prof_15x15" onclick="setMode('${id}','prof_15x15',this)">▮ 15×15 (pion/poz)</button>
+        <button class="mode-btn" data-mode="prof_10x10" onclick="setMode('${id}','prof_10x10',this)">▮ 10×10 (pion/poz)</button>
+        <button class="mode-btn" data-mode="prof_5x10" onclick="setMode('${id}','prof_5x10',this)">▮ 5×10 (pion/poz)</button>
+        <button class="mode-btn" data-mode="prof_2x10" onclick="setMode('${id}','prof_2x10',this)">❘ 2×10 (pion/poz)</button>
+        <button class="mode-btn" data-mode="prof_15x10_h" onclick="setMode('${id}','prof_15x10_h',this)">▬ 15×10 poz.</button>
+        <div class="tool-sep"></div>
+        <button class="mode-btn" data-mode="side_wedge" onclick="setMode('${id}','side_wedge',this)">📐 Klin</button>
+        <select class="thick-sel" id="wedge_h_${id}" onchange="setWedgeHeight('${id}', this.value)" title="Wysokość klina przy ścianie">
+          <option value="4">Klin: 4 cm</option>
+          <option value="4.5">Klin: 4.5 cm</option>
+          <option value="5" selected>Klin: 5 cm</option>
+          <option value="5.5">Klin: 5.5 cm</option>
+          <option value="6">Klin: 6 cm</option>
+          <option value="6.5">Klin: 6.5 cm</option>
+          <option value="7">Klin: 7 cm</option>
+        </select>
+        <button class="mode-btn" data-mode="wall_angle" onclick="setMode('${id}','wall_angle',this)">⌞ Kątownik mask.</button>
+      `;
+    }
+
+    bar.innerHTML = `
+      <div class="tool-row">
+        <button class="mode-btn active" data-mode="line" onclick="setMode('${id}','line',this)">📏 Linia</button>
+        <button class="mode-btn" data-mode="dim" onclick="setMode('${id}','dim',this)">↔️ Wymiar</button>
+        <button class="mode-btn" data-mode="free" onclick="setMode('${id}','free',this)">✏️ Odręcznie</button>
+        <div class="tool-sep"></div>
+        ${specificButtons}
+      </div>
+      <div class="tool-row">
+        <div class="dot active" style="background:#0f172a;" onclick="setColor('${id}','#0f172a',this)"></div>
+        <div class="dot" style="background:#dc2626;" onclick="setColor('${id}','#dc2626',this)"></div>
+        <div class="dot" style="background:#2563eb;" onclick="setColor('${id}','#2563eb',this)"></div>
+        <div class="dot" style="background:#16a34a;" onclick="setColor('${id}','#16a34a',this)"></div>
+        <div class="tool-sep"></div>
+        <select class="thick-sel" onchange="setThickness('${id}', this.value)" title="Grubość kreski">
+          <option value="1.6">Cienka</option>
+          <option value="2.6" selected>Średnia</option>
+          <option value="4.2">Gruba</option>
+        </select>
+        <button class="snap-btn active" id="snap_${id}" onclick="toggleSnap('${id}',this)">🧲 Siatka</button>
+        <button class="btn btn-sm btn-white" style="border:1px solid #94a3b8;" onclick="undoCanvas('${id}')">↩️ Cofnij</button>
+        <button class="btn btn-sm btn-red" onclick="clearCanvas('${id}')">Wyczyść</button>
+      </div>
+    `;
+  }
+
+  function snapCoord(val, grid = 20) {
+    return Math.round(val / grid) * grid;
+  }
+
+  function snapOrtho(x1, y1, x2, y2) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dist = Math.hypot(dx, dy);
+    if (dist < 6) return { x: x2, y: y2 };
+    const angle = Math.abs(Math.atan2(dy, dx) * 180 / Math.PI);
+    if (angle < 7 || angle > 173) return { x: x2, y: y1 };
+    if (Math.abs(angle - 90) < 7) return { x: x1, y: y2 };
+    return { x: x2, y: y2 };
+  }
+
+  function drawDimensionLine(ctx, x1, y1, x2, y2, color, text) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 1.6;
+    ctx.setLineDash([]);
+
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const headLen = 9;
+
+    const drawArrowHead = (px, py, ang) => {
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px - headLen * Math.cos(ang - Math.PI / 6), py - headLen * Math.sin(ang - Math.PI / 6));
+      ctx.lineTo(px - headLen * Math.cos(ang + Math.PI / 6), py - headLen * Math.sin(ang + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+    };
+    drawArrowHead(x2, y2, angle);
+    drawArrowHead(x1, y1, angle + Math.PI);
+
+    const perp = angle + Math.PI / 2;
+    const tick = 7;
+    [[x1, y1], [x2, y2]].forEach(([px, py]) => {
+      ctx.beginPath();
+      ctx.moveTo(px - tick * Math.cos(perp), py - tick * Math.sin(perp));
+      ctx.lineTo(px + tick * Math.cos(perp), py + tick * Math.sin(perp));
+      ctx.stroke();
+    });
+
+    if (text) {
+      const mx = (x1 + x2) / 2;
+      const my = (y1 + y2) / 2;
+      ctx.font = 'bold 13px Arial, sans-serif';
+      const metrics = ctx.measureText(text);
+      const pad = 4;
+      const bw = metrics.width + pad * 2;
+      const bh = 18;
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(mx - bw / 2, my - bh / 2, bw, bh);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(mx - bw / 2, my - bh / 2, bw, bh);
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, mx, my + 0.5);
+    }
+    ctx.restore();
+  }
+
+  function drawRoofBayGrid(ctx, x1, y1, x2, y2, color, bays) {
+    const left = Math.min(x1, x2);
+    const right = Math.max(x1, x2);
+    const top = Math.min(y1, y2);
+    const bottom = Math.max(y1, y2);
+    const w = right - left;
+    const h = Math.max(bottom - top, 24);
+    const count = Math.max(1, Math.min(30, parseInt(bays, 10) || 4));
+    const step = w / count;
+
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.4;
+    ctx.setLineDash([]);
+    ctx.strokeRect(left, top, w, h);
+
+    for (let i = 1; i < count; i++) {
+      const rx = left + i * step;
+      ctx.beginPath();
+      ctx.moveTo(rx, top);
+      ctx.lineTo(rx, top + h);
+      ctx.stroke();
+    }
+
+    ctx.lineWidth = 1.1;
+    ctx.strokeStyle = '#0284c7';
+    for (let i = 0; i < count; i++) {
+      const bx = left + i * step;
+      const cx = bx + step / 2;
+      const cy = top + h / 2;
+      const rLen = Math.min(step * 0.28, h * 0.28, 16);
+      ctx.beginPath();
+      ctx.moveTo(cx - rLen, cy + rLen * 0.6);
+      ctx.lineTo(cx + rLen * 0.4, cy - rLen * 0.8);
+      ctx.moveTo(cx - rLen * 0.3, cy + rLen * 0.9);
+      ctx.lineTo(cx + rLen, cy - rLen * 0.4);
+      ctx.stroke();
+    }
+
+    ctx.font = 'bold 11px Arial, sans-serif';
+    ctx.fillStyle = color;
+    ctx.textAlign = 'center';
+    ctx.fillText(`${count} pól (${count + 1} krokwi)`, left + w / 2, Math.max(12, top - 5));
+    ctx.restore();
+  }
+
+  function drawPostStamp(ctx, x, y, type, color) {
+    ctx.save();
+    ctx.setLineDash([]);
+    if (type === 'post_wide') {
+      const s = 26;
+      ctx.fillStyle = '#e2e8f0';
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.6;
+      ctx.fillRect(x - s / 2, y - s / 2, s, s);
+      ctx.strokeRect(x - s / 2, y - s / 2, s, s);
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(x - s / 2, y - s / 2); ctx.lineTo(x + s / 2, y + s / 2);
+      ctx.moveTo(x + s / 2, y - s / 2); ctx.lineTo(x - s / 2, y + s / 2);
+      ctx.stroke();
+    } else if (type === 'post_narrow') {
+      const s = 16;
+      ctx.fillStyle = '#f1f5f9';
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.2;
+      ctx.fillRect(x - s / 2, y - s / 2, s, s);
+      ctx.strokeRect(x - s / 2, y - s / 2, s, s);
+      ctx.beginPath();
+      ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+    } else if (type === 'post_drain') {
+      const s = 26;
+      ctx.fillStyle = '#dbeafe';
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.6;
+      ctx.fillRect(x - s / 2, y - s / 2, s, s);
+      ctx.strokeRect(x - s / 2, y - s / 2, s, s);
+      ctx.strokeStyle = '#0284c7';
+      ctx.fillStyle = '#0284c7';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y, 6.5, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.font = 'bold 9px Arial, sans-serif';
+      ctx.fillStyle = '#0369a1';
+      ctx.textAlign = 'center';
+      ctx.fillText('ODW', x, y + s / 2 + 10);
+    }
+    ctx.restore();
+  }
+
+  function setWedgeHeight(id, val) {
+    if (canvases[id]) canvases[id].wedgeHeightCm = parseFloat(val) || 5;
+  }
+
+  // Rysowanie profili konstrukcyjnych w pionie lub poziomie
+  function drawProfileElement(ctx, x1, y1, x2, y2, mode, color) {
+    const def = PROFILE_DEFS[mode];
+    if (!def) return;
+
+    let endPt = snapOrtho(x1, y1, x2, y2);
+    if (def.forceHoriz) endPt = { x: x2, y: y1 };
+
+    const dx = endPt.x - x1;
+    const dy = endPt.y - y1;
+    if (Math.hypot(dx, dy) < 6) return;
+
+    const thickPx = def.widthCm * PX_PER_CM;
+    const isHoriz = Math.abs(dx) >= Math.abs(dy);
+
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = def.fill;
+    ctx.lineWidth = 1.8;
+    if (def.dashed) ctx.setLineDash([6, 4]);
+
+    let rx, ry, rw, rh;
+    if (isHoriz) {
+      rx = Math.min(x1, endPt.x);
+      ry = y1 - thickPx / 2;
+      rw = Math.abs(dx);
+      rh = thickPx;
+    } else {
+      rx = x1 - thickPx / 2;
+      ry = Math.min(y1, endPt.y);
+      rw = thickPx;
+      rh = Math.abs(dy);
+    }
+
+    ctx.fillRect(rx, ry, rw, rh);
+    ctx.strokeRect(rx, ry, rw, rh);
+    ctx.setLineDash([]);
+
+    if (def.label) {
+      ctx.font = 'bold 11px Arial, sans-serif';
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      if (isHoriz) {
+        if (rh >= 22 && rw > ctx.measureText(def.label).width + 10) {
+          ctx.fillText(def.label, rx + rw / 2, ry + rh / 2);
+        } else {
+          ctx.fillText(def.label, rx + rw / 2, ry - 9);
+        }
+      } else {
+        ctx.save();
+        ctx.translate(rx + rw / 2, ry + rh / 2);
+        ctx.rotate(-Math.PI / 2);
+        if (rw >= 22 && rh > ctx.measureText(def.label).width + 10) {
+          ctx.fillText(def.label, 0, 0);
+        } else {
+          ctx.fillText(def.label, 0, -(rw / 2 + 10));
+        }
+        ctx.restore();
+      }
+    }
+    ctx.restore();
+  }
+
+  // Klin boczny: 4-7 cm przy ścianie, 0 cm na końcu, kąt prosty ZAWSZE u góry przy ścianie
+  function drawSideWedge(ctx, x1, y1, x2, y2, heightCm, color) {
+    const dx = x2 - x1;
+    if (Math.abs(dx) < 12) return;
+
+    const clampedH = Math.max(4, Math.min(7, parseFloat(heightCm) || 5));
+    const hPx = clampedH * 4.2;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1, y1 + hPx);
+    ctx.lineTo(x2, y2);
+    ctx.closePath();
+
+    ctx.fillStyle = 'rgba(2, 132, 199, 0.24)';
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([]);
+    ctx.stroke();
+
+    const dir = dx >= 0 ? 1 : -1;
+    const sq = Math.min(9, hPx * 0.55);
+    ctx.strokeStyle = '#0369a1';
+    ctx.lineWidth = 1.3;
+    ctx.strokeRect(dir === 1 ? x1 : x1 - sq, y1, sq, sq);
+
+    const midX = (x1 + x2) / 2;
+    ctx.font = 'bold 11px Arial, sans-serif';
+    ctx.fillStyle = '#0369a1';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Klin ${clampedH}cm → 0cm`, midX, Math.min(y1, y2) - 8);
+    ctx.restore();
+  }
+
+  // Kątownik maskujący przy ścianie budynku
+  function drawWallAngle(ctx, x1, y1, x2, y2, canvasId, color) {
+    let dir = x2 >= x1 ? 1 : -1;
+    if (Math.abs(x2 - x1) < 6) dir = canvasId === 'cLeft' ? -1 : 1;
+    const topY = Math.min(y1, y2);
+    const botY = Math.max(Math.max(y1, y2), topY + 26);
+    const legHorizontal = 22;
+
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3.2;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(x1, topY);
+    ctx.lineTo(x1, botY);
+    ctx.lineTo(x1 + dir * legHorizontal, botY);
+    ctx.stroke();
+
+    ctx.font = 'bold 11px Arial, sans-serif';
+    ctx.fillStyle = color;
+    ctx.textAlign = dir === 1 ? 'left' : 'right';
+    ctx.fillText('Kątownik maskujący', x1 + dir * 6, topY - 6);
+    ctx.restore();
+  }
+
+  function initCanvas(id, defaultMode = 'line', lineWidth = 2.6) {
+    const canvas = document.getElementById(id);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = '#0f172a';
+
+    canvases[id] = {
+      canvas,
+      ctx,
+      color: '#0f172a',
+      lineWidth,
+      mode: defaultMode,
+      wedgeHeightCm: 5,
+      snap: true,
+      drawing: false,
+      startX: 0,
+      startY: 0,
+      snapshot: null,
+      history: []
+    };
+
+    const getPos = (e) => {
+      const r = canvas.getBoundingClientRect();
+      const pt = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
+      let x = (pt.clientX - r.left) * (canvas.width / r.width);
+      let y = (pt.clientY - r.top) * (canvas.height / r.height);
+      if (canvases[id].snap && canvases[id].mode !== 'free') {
+        x = snapCoord(x, 20);
+        y = snapCoord(y, 20);
+      }
+      return { x, y };
+    };
+
+    const start = (e) => {
+      if (e.cancelable) e.preventDefault();
+      const state = canvases[id];
+      const p = getPos(e);
+
+      state.history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+      if (state.history.length > 25) state.history.shift();
+
+      if (['post_wide', 'post_narrow', 'post_drain'].includes(state.mode)) {
+        drawPostStamp(ctx, p.x, p.y, state.mode, state.color);
+        return;
+      }
+
+      state.drawing = true;
+      state.startX = p.x;
+      state.startY = p.y;
+      state.snapshot = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      if (state.mode === 'free') {
+        ctx.strokeStyle = state.color;
+        ctx.lineWidth = state.lineWidth;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x + 0.1, p.y + 0.1);
+        ctx.stroke();
+      }
+    };
+
+    const move = (e) => {
+      const state = canvases[id];
+      if (!state.drawing) return;
+      if (e.cancelable) e.preventDefault();
+      const p = getPos(e);
+
+      if (state.mode === 'free') {
+        ctx.strokeStyle = state.color;
+        ctx.lineWidth = state.lineWidth;
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+      } else {
+        ctx.putImageData(state.snapshot, 0, 0);
+        if (state.mode === 'line') {
+          const endPt = snapOrtho(state.startX, state.startY, p.x, p.y);
+          ctx.save();
+          ctx.strokeStyle = state.color;
+          ctx.lineWidth = state.lineWidth;
+          ctx.beginPath();
+          ctx.moveTo(state.startX, state.startY);
+          ctx.lineTo(endPt.x, endPt.y);
+          ctx.stroke();
+          ctx.restore();
+        } else if (state.mode === 'dim') {
+          const endPt = snapOrtho(state.startX, state.startY, p.x, p.y);
+          drawDimensionLine(ctx, state.startX, state.startY, endPt.x, endPt.y, state.color, '');
+        } else if (state.mode === 'roof') {
+          ctx.save();
+          ctx.strokeStyle = state.color;
+          ctx.lineWidth = 1.6;
+          ctx.setLineDash([5, 4]);
+          const left = Math.min(state.startX, p.x);
+          const top = Math.min(state.startY, p.y);
+          const w = Math.abs(p.x - state.startX);
+          const h = Math.max(Math.abs(p.y - state.startY), 24);
+          ctx.strokeRect(left, top, w, h);
+          ctx.restore();
+        } else if (PROFILE_DEFS[state.mode]) {
+          drawProfileElement(ctx, state.startX, state.startY, p.x, p.y, state.mode, state.color);
+        } else if (state.mode === 'side_wedge') {
+          drawSideWedge(ctx, state.startX, state.startY, p.x, p.y, state.wedgeHeightCm, state.color);
+        } else if (state.mode === 'wall_angle') {
+          drawWallAngle(ctx, state.startX, state.startY, p.x, p.y, id, state.color);
+        }
+      }
+    };
+
+    const end = (e) => {
+      const state = canvases[id];
+      if (!state.drawing) return;
+      state.drawing = false;
+
+      if (state.mode === 'dim' || state.mode === 'roof') {
+        const ptSource = (e && e.changedTouches && e.changedTouches.length > 0) ? e.changedTouches[0] : e;
+        let endX = state.startX, endY = state.startY;
+        if (ptSource && typeof ptSource.clientX === 'number') {
+          const r = canvas.getBoundingClientRect();
+          endX = (ptSource.clientX - r.left) * (canvas.width / r.width);
+          endY = (ptSource.clientY - r.top) * (canvas.height / r.height);
+          if (state.snap) {
+            endX = snapCoord(endX, 20);
+            endY = snapCoord(endY, 20);
+          }
+        }
+        ctx.putImageData(state.snapshot, 0, 0);
+
+        if (state.mode === 'dim') {
+          const endPt = snapOrtho(state.startX, state.startY, endX, endY);
+          if (Math.hypot(endPt.x - state.startX, endPt.y - state.startY) > 10) {
+            const val = prompt('Podaj wymiar [cm] (np. 450):', '');
+            const label = val && val.trim() ? `${val.trim()} cm` : '';
+            drawDimensionLine(ctx, state.startX, state.startY, endPt.x, endPt.y, state.color, label);
+          } else {
+            state.history.pop();
+          }
+        } else if (state.mode === 'roof') {
+          if (Math.abs(endX - state.startX) > 20) {
+            const bays = prompt('Podaj liczbę pól / szyb dachowych (np. 4, 5, 6):', '5');
+            if (bays !== null) {
+              drawRoofBayGrid(ctx, state.startX, state.startY, endX, endY, state.color, bays);
+            } else {
+              state.history.pop();
+            }
+          } else {
+            state.history.pop();
+          }
+        }
+      }
+    };
+
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+    canvas.addEventListener('touchstart', start, { passive: false });
+    canvas.addEventListener('touchmove', move, { passive: false });
+    canvas.addEventListener('touchend', end);
+  }
+
+  function parseDimCm(id, fallback) {
+    const el = document.getElementById(id);
+    if (!el || !el.value) return fallback;
+    const match = String(el.value).match(/(\d+(?:[.,]\d+)?)/);
+    return match ? parseFloat(match[1].replace(',', '.')) : fallback;
+  }
+
+  function autoGenerateSketches(force = false) {
+    const w1 = parseDimCm('dim_w1', 400);
+    const w2 = parseDimCm('dim_w2', w1);
+    const d  = parseDimCm('dim_d', 300);
+    const h1 = parseDimCm('dim_h1', 280);
+    const h2 = parseDimCm('dim_h2', 220);
+    const postsCount = Math.max(1, Math.min(8, parseInt(parseDimCm('dim_posts', 2), 10) || 2));
+
+    // 1. RZUT Z GÓRY (cTop)
+    if (canvases.cTop) {
+      const { ctx, canvas } = canvases.cTop;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const maxW = canvas.width - 200;
+      const maxH = canvas.height - 140;
+      const scale = Math.min(maxW / Math.max(w1, w2, 100), maxH / Math.max(d, 100));
+
+      const w1Px = w1 * scale;
+      const w2Px = w2 * scale;
+      const dPx  = d * scale;
+      const startX = Math.round((canvas.width - Math.max(w1Px, w2Px)) / 2);
+      const wallY = 75;
+
+      ctx.save();
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(startX - 20, wallY - 16, Math.max(w1Px, w2Px) + 40, 16);
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(startX - 20, wallY);
+      ctx.lineTo(startX + Math.max(w1Px, w2Px) + 20, wallY);
+      ctx.stroke();
+      ctx.font = 'bold 11px Arial, sans-serif';
+      ctx.fillStyle = '#334155';
+      ctx.textAlign = 'center';
+      ctx.fillText('ŚCIANA BUDYNKU', startX + Math.max(w1Px, w2Px) / 2, wallY - 22);
+      ctx.restore();
+
+      const topLeftX = startX + (Math.max(w1Px, w2Px) - w1Px) / 2;
+      const topRightX = topLeftX + w1Px;
+      const botLeftX = startX + (Math.max(w1Px, w2Px) - w2Px) / 2;
+      const botRightX = botLeftX + w2Px;
+      const frontY = wallY + dPx;
+
+      ctx.save();
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.moveTo(topLeftX, wallY);
+      ctx.lineTo(topRightX, wallY);
+      ctx.lineTo(botRightX, frontY);
+      ctx.lineTo(botLeftX, frontY);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Rynna frontowa (16 cm)
+      ctx.fillStyle = 'rgba(30, 41, 59, 0.15)';
+      ctx.fillRect(botLeftX, frontY - 14, w2Px, 14);
+      ctx.strokeRect(botLeftX, frontY - 14, w2Px, 14);
+      ctx.restore();
+
+      for (let i = 0; i < postsCount; i++) {
+        const ratio = postsCount === 1 ? 0.5 : i / (postsCount - 1);
+        const px = botLeftX + ratio * w2Px;
+        drawPostStamp(ctx, px, frontY, 'post_wide', '#0f172a');
+      }
+
+      drawDimensionLine(ctx, topLeftX, wallY - 38, topRightX, wallY - 38, '#2563eb', `W1: ${w1} cm`);
+      if (w2 !== w1) {
+        drawDimensionLine(ctx, botLeftX, frontY + 34, botRightX, frontY + 34, '#2563eb', `W2: ${w2} cm`);
+      }
+      drawDimensionLine(ctx, Math.max(topRightX, botRightX) + 40, wallY, Math.max(topRightX, botRightX) + 40, frontY, '#2563eb', `D: ${d} cm`);
+    }
+
+    // 2. WIDOK Z PRZODU (cFront)
+    if (canvases.cFront) {
+      const { ctx, canvas } = canvases.cFront;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const scale = Math.min((canvas.width - 200) / Math.max(w2, 100), (canvas.height - 120) / Math.max(h1, 100));
+      const wPx = w2 * scale;
+      const h2Px = h2 * scale;
+      const h1Px = h1 * scale;
+      const groundY = canvas.height - 45;
+      const leftX = Math.round((canvas.width - wPx) / 2);
+      const rightX = leftX + wPx;
+
+      ctx.save();
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(leftX - 30, groundY);
+      ctx.lineTo(rightX + 30, groundY);
+      ctx.stroke();
+
+      ctx.setLineDash([5, 4]);
+      ctx.strokeStyle = '#94a3b8';
+      ctx.strokeRect(leftX, groundY - h1Px, wPx, h1Px - h2Px);
+      ctx.setLineDash([]);
+
+      // Belka przednia: RYNNA (wys. 17 cm)
+      const beamH = Math.max(17, 17 * scale);
+      ctx.fillStyle = 'rgba(30, 41, 59, 0.22)';
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 2.2;
+      ctx.fillRect(leftX, groundY - h2Px, wPx, beamH);
+      ctx.strokeRect(leftX, groundY - h2Px, wPx, beamH);
+      ctx.font = 'bold 11px Arial, sans-serif';
+      ctx.fillStyle = '#0f172a';
+      ctx.textAlign = 'center';
+      ctx.fillText('RYNNA (17 cm)', leftX + wPx / 2, groundY - h2Px + beamH / 2 + 4);
+
+      const postW = Math.max(12, 15 * scale);
+      for (let i = 0; i < postsCount; i++) {
+        const ratio = postsCount === 1 ? 0.5 : i / (postsCount - 1);
+        const px = leftX + ratio * (wPx - postW);
+        ctx.fillStyle = 'rgba(100, 116, 139, 0.25)';
+        ctx.fillRect(px, groundY - h2Px + beamH, postW, h2Px - beamH);
+        ctx.strokeRect(px, groundY - h2Px + beamH, postW, h2Px - beamH);
+      }
+      ctx.restore();
+
+      drawDimensionLine(ctx, leftX - 40, groundY - h2Px, leftX - 40, groundY, '#2563eb', `H2: ${h2} cm`);
+      drawDimensionLine(ctx, leftX, groundY + 24, rightX, groundY + 24, '#2563eb', `W2: ${w2} cm`);
+    }
+
+    // 3 i 4. BOKI PRAWY I LEWY (cRight, cLeft)
+    ['cRight', 'cLeft'].forEach(sideId => {
+      if (!canvases[sideId]) return;
+      const { ctx, canvas } = canvases[sideId];
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const isRight = sideId === 'cRight';
+      const scale = Math.min((canvas.width - 240) / Math.max(d, 100), (canvas.height - 110) / Math.max(h1, 100));
+      const dPx = d * scale;
+      const h1Px = h1 * scale;
+      const h2Px = h2 * scale;
+      const groundY = canvas.height - 45;
+
+      const wallX = isRight ? 170 : canvas.width - 170;
+      const frontX = isRight ? wallX + dPx : wallX - dPx;
+
+      ctx.save();
+      ctx.fillStyle = '#e2e8f0';
+      ctx.fillRect(isRight ? wallX - 24 : wallX, groundY - h1Px - 30, 24, h1Px + 30);
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(wallX, groundY - h1Px - 30);
+      ctx.lineTo(wallX, groundY);
+      ctx.lineTo(isRight ? frontX + 40 : frontX - 40, groundY);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#0f172a';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(wallX, groundY - h1Px);
+      ctx.lineTo(frontX, groundY - h2Px);
+      ctx.stroke();
+
+      const postW = Math.max(12, 15 * scale);
+      const postX = isRight ? frontX - postW : frontX;
+      ctx.fillStyle = 'rgba(100, 116, 139, 0.25)';
+      ctx.lineWidth = 2;
+      ctx.fillRect(postX, groundY - h2Px, postW, h2Px);
+      ctx.strokeRect(postX, groundY - h2Px, postW, h2Px);
+      ctx.restore();
+
+      const h1DimX = isRight ? wallX - 46 : wallX + 46;
+      const h2DimX = isRight ? frontX + 38 : frontX - 38;
+      drawDimensionLine(ctx, h1DimX, groundY - h1Px, h1DimX, groundY, '#2563eb', `H1: ${h1} cm`);
+      drawDimensionLine(ctx, h2DimX, groundY - h2Px, h2DimX, groundY, '#2563eb', `H2: ${h2} cm`);
+      drawDimensionLine(ctx, Math.min(wallX, frontX), groundY + 24, Math.max(wallX, frontX), groundY + 24, '#2563eb', `D: ${d} cm`);
+    });
+  }
+
+  function setMode(id, mode, el) {
+    if (!canvases[id]) return;
+    canvases[id].mode = mode;
+    const bar = document.getElementById('bar_' + id);
+    if (bar) bar.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function toggleSnap(id, el) {
+    if (!canvases[id]) return;
+    canvases[id].snap = !canvases[id].snap;
+    el.classList.toggle('active', canvases[id].snap);
+  }
+
+  function setThickness(id, val) {
+    if (!canvases[id]) return;
+    canvases[id].lineWidth = parseFloat(val) || 2.6;
+  }
+
+  function setColor(id, color, el) {
+    canvases[id].color = color;
+    el.parentElement.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function undoCanvas(id) {
+    const item = canvases[id];
+    if (item && item.history.length > 0) item.ctx.putImageData(item.history.pop(), 0, 0);
+  }
+
+  function clearCanvas(id) {
+    const item = canvases[id];
+    if (item) {
+      item.history.push(item.ctx.getImageData(0, 0, item.canvas.width, item.canvas.height));
+      item.ctx.clearRect(0, 0, item.canvas.width, item.canvas.height);
+    }
+  }
+
+  function exportSinglePng(id, name) {
+    const item = canvases[id];
+    if (!item) return;
+    const tmp = document.createElement('canvas');
+    tmp.width = item.canvas.width;
+    tmp.height = item.canvas.height;
+    const tctx = tmp.getContext('2d');
+    tctx.fillStyle = '#ffffff';
+    tctx.fillRect(0, 0, tmp.width, tmp.height);
+    tctx.drawImage(item.canvas, 0, 0);
+    const link = document.createElement('a');
+    link.download = `MMTarasy_${name}.png`;
+    link.href = tmp.toDataURL('image/png');
+    link.click();
+  }
+
+  function saveSketches() {
+    const dims = {};
+    ['dim_w1', 'dim_w2', 'dim_d', 'dim_h1', 'dim_h2', 'dim_posts'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) dims[id] = el.value;
+    });
+    const drawings = {};
+    SKETCH_IDS.forEach(id => {
+      if (canvases[id]) drawings[id] = canvases[id].canvas.toDataURL();
+    });
+    localStorage.setItem('mmtarasy_szkicownik_v1', JSON.stringify({ dims, drawings }));
+    alert('Zapisano szkice w pamięci przeglądarki.');
+  }
+
+  function loadSketches() {
+    const raw = localStorage.getItem('mmtarasy_szkicownik_v1');
+    if (!raw) { alert('Brak zapisanych szkiców.'); return; }
+    const parsed = JSON.parse(raw);
+    if (parsed.dims) {
+      Object.entries(parsed.dims).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      });
+    }
+    if (parsed.drawings) {
+      Object.entries(parsed.drawings).forEach(([id, dataUrl]) => {
+        if (canvases[id] && dataUrl) {
+          const img = new Image();
+          img.onload = () => {
+            canvases[id].ctx.clearRect(0, 0, canvases[id].canvas.width, canvases[id].canvas.height);
+            canvases[id].ctx.drawImage(img, 0, 0);
+          };
+          img.src = dataUrl;
+        }
+      });
+    }
+    alert('Wczytano zapisane szkice.');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    SKETCH_IDS.forEach(id => {
+      buildToolbar(id);
+      initCanvas(id, 'line', 2.6);
+    });
+    autoGenerateSketches(true);
+  });
+</script>
+</body>
+</html>
